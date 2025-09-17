@@ -47,7 +47,7 @@ const Projects: React.FC = () => {
                         <figure className="relative aspect-video bg-gray-700 rounded-t-lg">
                             <img
                                 src="/img/hotel.png"
-                                alt="Imagen del proyecto ProjeXus"
+                                alt="Imagen del proyecto del Hotel Aquamarine"
                                 className="w-full h-full object-cover rounded-t-lg"
                             />
                         </figure>
@@ -80,8 +80,8 @@ const Projects: React.FC = () => {
                     <div className="bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300">
                         <figure className="relative aspect-video bg-gray-700 rounded-t-lg">
                             <img
-                                src="/public/img/biblioteca.jpg"
-                                alt="Imagen del proyecto ProjeXus"
+                                src="/img/biblioteca.jpg"
+                                alt="Imagen del proyecto de la biblioteca digital"
                                 className="w-full h-full object-cover rounded-t-lg"
                             />
                         </figure>
