@@ -1,1 +1,71 @@
 @import "tailwindcss";
+
+html { scroll-behavior: smooth; }
+
+/* ── Scroll-reveal animation ─────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Light mode overrides ────────────────────────────── */
+
+/* Backgrounds */
+html[data-theme="light"] header,
+html[data-theme="light"] section,
+html[data-theme="light"] nav {
+  background-color: #f1f5f9;
+}
+
+html[data-theme="light"] .bg-gray-950 { background-color: #f1f5f9; }
+html[data-theme="light"] .bg-gray-900 { background-color: #ffffff; }
+html[data-theme="light"] .bg-gray-800 { background-color: #e2e8f0; }
+
+/* Code card dark bg */
+html[data-theme="light"] .bg-\[#0d1117\] { background-color: #f8fafc; }
+
+/* Transparent bg helpers */
+html[data-theme="light"] .bg-white\/2,
+html[data-theme="light"] .bg-white\/3,
+html[data-theme="light"] .bg-white\/4,
+html[data-theme="light"] .bg-white\/5,
+html[data-theme="light"] .bg-white\/10 { background-color: #e2e8f0; }
+
+html[data-theme="light"] .hover\:bg-white\/10:hover { background-color: #cbd5e1; }
+html[data-theme="light"] .hover\:bg-white\/3:hover  { background-color: #e2e8f0; }
+
+/* Text */
+html[data-theme="light"] .text-white   { color: #0f172a; }
+html[data-theme="light"] .text-gray-100 { color: #1e293b; }
+html[data-theme="light"] .text-gray-300 { color: #334155; }
+html[data-theme="light"] .text-gray-400 { color: #475569; }
+html[data-theme="light"] .text-gray-500 { color: #64748b; }
+html[data-theme="light"] .text-gray-600 { color: #94a3b8; }
+html[data-theme="light"] .text-gray-700 { color: #b0bfcf; }
+
+/* Gradient text on h1 (name) */
+html[data-theme="light"] .text-transparent {
+  background-image: linear-gradient(to right, #0f172a, #334155, #64748b) !important;
+}
+
+/* Borders */
+html[data-theme="light"] .border-white\/5,
+html[data-theme="light"] .border-white\/6,
+html[data-theme="light"] .border-white\/8,
+html[data-theme="light"] .border-white\/10,
+html[data-theme="light"] .border-white\/15,
+html[data-theme="light"] .border-white\/20 { border-color: #e2e8f0; }
+
+/* Dividers (Contact list) */
+html[data-theme="light"] .divide-white\/5 > * + * { border-color: #e2e8f0; }
+
+/* Nav backdrop */
+html[data-theme="light"] .bg-gray-950\/90 { background-color: rgb(241 245 249 / 0.92); }
+
+/* Code syntax tokens — keep readable */
+html[data-theme="light"] .text-gray-400.font-mono { color: #64748b; }
