@@ -1,81 +1,146 @@
-import React, { useEffect, useState } from 'react';
-import { FaGithub, FaSun, FaMoon, FaDownload } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
+import { FaSun, FaMoon, FaDownload, FaChessKnight } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { sections } from '../data/sections';
+import { useActiveSection } from '../hooks/useActiveSection';
 
 const Nav: React.FC = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
   const { theme, toggle } = useTheme();
+  const { active, scrollY, direction } = useActiveSection();
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const scrolled = scrollY > 40;
+  const hidden = scrolled && direction === 'down' && scrollY > 600 && !open;
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-gray-950/90 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/20'
-          : 'bg-transparent'
-      }`}
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+      className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 pt-3 md:pt-4 pointer-events-none"
     >
-      <div className="container mx-auto max-w-6xl px-6 py-4 flex items-center justify-between gap-4">
-        <a
-          href="#inicio"
-          className="font-mono text-sm text-emerald-400 hover:text-emerald-300 transition-colors duration-200 flex-shrink-0"
-        >
-          &lt;Cesar /&gt;
-        </a>
+      <nav
+        className={`nav-pill pointer-events-auto relative w-full max-w-5xl rounded-2xl border transition-[padding,background-color,border-color,box-shadow] duration-500 ${
+          scrolled || open ? 'nav-pill--scrolled py-2' : 'py-3 border-transparent bg-transparent'
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3 px-3 md:px-4">
+          <a href="#inicio" className="group flex items-center gap-2 flex-shrink-0" aria-label="Inicio">
+            <span className="nav-logo-mark w-8 h-8 rounded-lg flex items-center justify-center text-emerald-400 border border-emerald-500/30 bg-emerald-500/10">
+              <FaChessKnight size={14} />
+            </span>
+            <span className="font-mono text-sm text-emerald-400">
+              <span className="inline-block transition-transform duration-300 group-hover:-translate-x-0.5">&lt;</span>
+              Cesar
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-0.5"> /&gt;</span>
+            </span>
+          </a>
 
-        <div className="hidden md:flex items-center gap-8">
-          {[
-            { label: 'Proyectos', id: 'proyectos' },
-            { label: 'Habilidades', id: 'habilidades' },
-            { label: 'Contacto', id: 'contacto' },
-          ].map(({ label, id }) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200"
+          <ul className="hidden lg:flex items-center gap-0.5 rounded-xl p-1 nav-links">
+            {sections.map(({ id, label }) => {
+              const on = active === id;
+              return (
+                <li key={id}>
+                  <a
+                    href={`#${id}`}
+                    className={`relative block px-3.5 py-1.5 text-[13px] rounded-lg transition-colors duration-200 ${
+                      on ? 'text-white' : 'text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {on && (
+                      <motion.span
+                        layoutId="nav-active"
+                        className="nav-active absolute inset-0 rounded-lg"
+                        transition={{ type: 'spring', stiffness: 400, damping: 34 }}
+                      />
+                    )}
+                    <span className="relative">{label}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={toggle}
+              aria-label={theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors duration-200 cursor-pointer"
             >
-              {label}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={theme}
+                  initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
+                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {theme === 'dark' ? <FaSun size={15} /> : <FaMoon size={14} />}
+                </motion.span>
+              </AnimatePresence>
+            </button>
+
+            <a
+              href="/cv.pdf"
+              download
+              className="shine group hidden sm:flex items-center gap-2 text-xs font-semibold text-gray-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-2 rounded-lg transition-colors duration-200"
+            >
+              <FaDownload size={11} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+              Descargar CV
             </a>
-          ))}
+
+            <button
+              onClick={() => setOpen((o) => !o)}
+              aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={open}
+              className="lg:hidden w-9 h-9 flex flex-col items-center justify-center gap-[5px] rounded-lg text-gray-300 hover:bg-white/5 cursor-pointer"
+            >
+              <span className={`block w-4 h-px bg-current transition-transform duration-300 ${open ? 'translate-y-[3px] rotate-45' : ''}`} />
+              <span className={`block w-4 h-px bg-current transition-transform duration-300 ${open ? '-translate-y-[3px] -rotate-45' : ''}`} />
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* CV download */}
-          <a
-            href="/cv.pdf"
-            download
-            className="hidden md:flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-all duration-200"
-          >
-            <FaDownload size={11} />
-            CV
-          </a>
+        {scrolled && (
+          <div className="absolute left-4 right-4 bottom-0 h-px overflow-hidden rounded-full">
+            <motion.div style={{ scaleX: progress }} className="h-full origin-left bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-400" />
+          </div>
+        )}
 
-          {/* Theme toggle */}
-          <button
-            onClick={toggle}
-            aria-label="Toggle theme"
-            className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 hover:border-white/20 text-gray-400 hover:text-white transition-all duration-200 cursor-pointer"
-          >
-            {theme === 'dark' ? <FaSun size={15} /> : <FaMoon size={15} />}
-          </button>
-
-          {/* GitHub */}
-          <a
-            href="https://github.com/Cesaredmyt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 hover:border-white/20 text-gray-400 hover:text-white transition-all duration-200 cursor-pointer"
-          >
-            <FaGithub size={17} />
-          </a>
-        </div>
-      </div>
-    </nav>
+        <AnimatePresence>
+          {open && (
+            <motion.ul
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:hidden overflow-hidden px-3"
+            >
+              {sections.map(({ id, label }, i) => (
+                <motion.li key={id} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.03 * i }}>
+                  <a
+                    href={`#${id}`}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center justify-between py-3 border-b border-white/5 text-sm ${active === id ? 'text-emerald-400' : 'text-gray-300'}`}
+                  >
+                    {label}
+                    <span className="font-mono text-[11px] text-gray-600">0{i + 1}</span>
+                  </a>
+                </motion.li>
+              ))}
+              <li>
+                <a href="/cv.pdf" download className="flex items-center gap-2 py-3 text-sm text-emerald-400">
+                  <FaDownload size={11} /> Descargar CV
+                </a>
+              </li>
+            </motion.ul>
+          )}
+        </AnimatePresence>
+      </nav>
+    </motion.header>
   );
 };
 
