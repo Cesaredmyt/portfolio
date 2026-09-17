@@ -1,57 +1,168 @@
 import React from 'react';
-import { FaGraduationCap, FaStar } from 'react-icons/fa';
-import { useInView } from '../hooks/useInView';
+import { motion } from 'motion/react';
+import { FaGraduationCap, FaStar, FaCertificate, FaGoogle, FaExternalLinkAlt } from 'react-icons/fa';
+import SectionHeading from './ui/SectionHeading';
+import Reveal from './ui/Reveal';
+import SpotlightCard from './ui/SpotlightCard';
 
-const Education: React.FC = () => {
-  const { ref, inView } = useInView();
+interface Cert {
+  title: string;
+  issuer: string;
+  date: string;
+  url?: string;
+  courses?: string[];
+  accent: 'blue';
+}
 
-  return (
-    <section className="bg-gray-950 px-6 md:px-12 py-8">
-      <div className="container mx-auto max-w-6xl">
-        <div ref={ref} className={`reveal ${inView ? 'visible' : ''}`}>
-          <p className="text-xs font-mono text-gray-600 tracking-[0.2em] uppercase mb-4">
-            Educación
-          </p>
-          <div className="bg-gray-900 border border-white/5 hover:border-emerald-500/15 rounded-2xl p-6 transition-all duration-300 flex flex-col md:flex-row items-start md:items-center gap-6">
+const certs: Cert[] = [
+  {
+    title: 'Google AI Professional Certificate',
+    issuer: 'Google · Coursera',
+    date: 'Ago 2026',
+    url: 'https://coursera.org/verify/professional-cert/YGE1TV7LKSU2',
+    accent: 'blue',
+    courses: [
+      'AI Fundamentals',
+      'Brainstorming and Planning',
+      'Research and Insights',
+      'Writing and Communicating',
+      'Content Creation',
+      'Data Analysis',
+      'App Building',
+    ],
+  },
+];
 
-            {/* Icon */}
-            <div className="flex-shrink-0 w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center">
-              <FaGraduationCap size={26} className="text-emerald-400" />
+const inProgress = {
+  title: 'Google Cloud Engineering Certificate',
+  issuer: 'Google Cloud Career Launchpad · LatAm',
+  progress: 22,
+};
+
+const accentClass = {
+  blue: 'bg-blue-500/10 border-blue-500/20 text-blue-300',
+};
+
+const Education: React.FC = () => (
+  <section id="certificaciones" className="py-24 px-6 md:px-12 scroll-mt-16">
+    <div className="container mx-auto max-w-6xl">
+      <SectionHeading index="04" title="Formación y certificaciones" />
+
+      <Reveal>
+        <SpotlightCard
+          tilt={3}
+          className="group glass border border-white/5 hover:border-emerald-500/25 rounded-2xl p-6 md:p-7 transition-colors duration-300 flex flex-col md:flex-row items-start md:items-center gap-6 mb-6"
+        >
+          <div className="flex-shrink-0 w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110">
+            <FaGraduationCap size={26} className="text-emerald-400" />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <h3 className="font-display font-bold text-white text-lg md:text-xl leading-tight">
+              Ingeniería en Sistemas Computacionales
+            </h3>
+            <p className="text-sm text-gray-400 mt-1">Especialidad en Tecnologías de Desarrollo de Software</p>
+            <p className="text-sm text-gray-500 mt-1">Instituto Tecnológico de Morelia · TecNM</p>
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <span className="text-xs font-mono text-gray-400 border border-white/10 px-2.5 py-1 rounded-lg">2022 – 2027 (est.)</span>
+              <span className="flex items-center gap-1.5 text-xs font-mono text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
+                <FaStar size={9} className="transition-transform duration-700 group-hover:rotate-[144deg]" />
+                Mejor promedio — 7° semestre
+              </span>
             </div>
+          </div>
 
-            {/* Main info */}
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-white text-base md:text-lg leading-tight">
-                Ingeniería en Sistemas Computacionales
-              </h3>
-              <p className="text-sm text-gray-400 mt-0.5">
-                Especialidad en Tecnologías de Desarrollo de Software
-              </p>
-              <p className="text-sm text-gray-600 mt-1">
-                Instituto Tecnológico de Morelia &nbsp;·&nbsp; TecNM
-              </p>
-              <div className="flex flex-wrap items-center gap-2 mt-3">
-                <span className="text-xs font-mono text-gray-500 border border-white/8 px-2.5 py-1 rounded-lg">
-                  2022 – 2027 (est.)
-                </span>
-                <span className="flex items-center gap-1.5 text-xs font-mono text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
-                  <FaStar size={9} />
-                  Mejor promedio — 7° semestre
-                </span>
+          <div className="flex-shrink-0 text-center md:border-l border-white/5 md:pl-8">
+            <p className="font-display text-5xl font-bold text-emerald-400 leading-none text-glow transition-transform duration-300 group-hover:scale-110">94</p>
+            <p className="text-xs text-gray-500 mt-1 tracking-wide">Promedio</p>
+          </div>
+        </SpotlightCard>
+      </Reveal>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {certs.map((c, i) => (
+          <Reveal key={c.title} delay={i * 0.1} className="h-full">
+            <SpotlightCard
+              tilt={7}
+              className="group h-full glass border border-white/5 hover:border-white/15 rounded-2xl p-6 flex flex-col transition-colors duration-300"
+            >
+              <div className="flex items-center justify-between mb-5">
+                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-transform duration-500 group-hover:rotate-[360deg] ${accentClass[c.accent]}`}>
+                  {c.issuer.startsWith('Google') ? <FaGoogle size={15} /> : <FaCertificate size={16} />}
+                </div>
+                <span className="text-xs font-mono text-gray-500">{c.date}</span>
+              </div>
+              <h4 className="font-display font-semibold text-white leading-snug">{c.title}</h4>
+              <p className="text-sm text-gray-500 mt-1 mb-4">{c.issuer}</p>
+
+              {c.courses && (
+                <div className="mb-4">
+                  <p className="text-xs font-mono text-gray-500 mb-2">{c.courses.length} cursos</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {c.courses.map((course, k) => (
+                      <span
+                        key={course}
+                        style={{ transitionDelay: `${k * 30}ms` }}
+                        className="text-[11px] px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-gray-400 transition-all duration-300 group-hover:border-blue-400/30 group-hover:text-gray-200"
+                      >
+                        {course}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {c.url && (
+                <a
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link relative z-10 mt-auto inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-emerald-200 w-fit"
+                >
+                  Verificar credencial
+                  <FaExternalLinkAlt size={9} className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                </a>
+              )}
+            </SpotlightCard>
+          </Reveal>
+        ))}
+
+        <Reveal delay={0.2} className="h-full">
+          <SpotlightCard
+            tilt={7}
+            className="group h-full glass border border-dashed border-sky-500/25 hover:border-sky-500/50 rounded-2xl p-6 flex flex-col transition-colors duration-300"
+          >
+            <div className="flex items-center justify-between mb-5">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-300 transition-transform duration-500 group-hover:rotate-[360deg]">
+                <FaGoogle size={15} />
+              </div>
+              <span className="flex items-center gap-1.5 text-xs font-mono text-sky-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" /> en curso
+              </span>
+            </div>
+            <h4 className="font-display font-semibold text-white leading-snug">{inProgress.title}</h4>
+            <p className="text-sm text-gray-500 mt-1 mb-5">{inProgress.issuer}</p>
+            <div className="mt-auto">
+              <div className="flex justify-between text-[11px] font-mono text-gray-500 mb-1.5">
+                <span>progreso</span>
+                <span>{inProgress.progress}%</span>
+              </div>
+              <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  style={{ width: `${inProgress.progress}%`, originX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+                  className="h-full rounded-full bg-gradient-to-r from-sky-400 to-emerald-400"
+                />
               </div>
             </div>
-
-            {/* GPA */}
-            <div className="flex-shrink-0 text-center border-l border-white/5 pl-6 hidden md:block">
-              <p className="text-4xl font-extrabold font-mono text-emerald-400 leading-none">94</p>
-              <p className="text-xs text-gray-600 mt-1 tracking-wide">Promedio</p>
-            </div>
-
-          </div>
-        </div>
+          </SpotlightCard>
+        </Reveal>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default Education;

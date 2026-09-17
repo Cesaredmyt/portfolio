@@ -1,15 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="public/img/c.svg" />
+    <link rel="icon" type="image/svg+xml" href="/img/c.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portafolio - Cesar Enrique Diaz Maldonado</title>
+    <meta name="description" content="César Enrique Díaz Maldonado — backend, infraestructura self-hosted e IA aplicada. Morelia, México." />
+    <meta name="theme-color" content="#030712" />
+    <title>César Díaz — Backend, infraestructura e IA</title>
 
-    <link rel="stylesheet" href="https://use.typekit.net/jnt2gwj.css">
+    <!-- Aplica el tema guardado antes de pintar: evita el destello oscuro→claro -->
+    <script>
+      try {
+        var t = localStorage.getItem('portfolio-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+
+    <link rel="preload" as="image" href="/img/avatar.webp" type="image/webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <!-- Fuentes sin bloquear el primer pintado -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://use.typekit.net/jnt2gwj.css" media="print" onload="this.media='all'" />
+
+    <!-- Esqueleto inicial: se ve mientras llega el JavaScript y React lo reemplaza al montar -->
+    <style>
+      html { background: #030712; }
+      html[data-theme="light"] { background: #f5f7fb; }
+      body { margin: 0; }
+      .boot { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 7rem 1.5rem 3rem; box-sizing: border-box; font-family: system-ui, sans-serif; }
+      .boot-grid { width: 100%; max-width: 72rem; display: grid; gap: 3.5rem; grid-template-columns: 1fr; align-items: center; }
+      @media (min-width: 768px) { .boot-grid { grid-template-columns: 3fr 2fr; } }
+      .boot-b { border-radius: 10px; margin-bottom: 14px; background: linear-gradient(90deg, #111827 0%, #1f2937 50%, #111827 100%); background-size: 200% 100%; animation: boot-shimmer 1.4s ease-in-out infinite; }
+      html[data-theme="light"] .boot-b { background-image: linear-gradient(90deg, #e5e9f0 0%, #f3f5f9 50%, #e5e9f0 100%); }
+      .boot-photo { width: 18rem; height: 18rem; max-width: 70vw; max-height: 70vw; border-radius: 9999px; margin: 0 auto; }
+      @keyframes boot-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+      @media (prefers-reduced-motion: reduce) { .boot-b { animation: none; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" aria-hidden="true">
+        <div class="boot-grid">
+          <div>
+            <div class="boot-b" style="width:210px;height:26px;border-radius:999px"></div>
+            <div class="boot-b" style="width:92%;height:64px;margin-top:22px"></div>
+            <div class="boot-b" style="width:70%;height:64px"></div>
+            <div class="boot-b" style="width:240px;height:22px;margin-top:22px"></div>
+            <div class="boot-b" style="width:85%;height:16px;margin-top:22px"></div>
+            <div class="boot-b" style="width:65%;height:16px"></div>
+            <div style="display:flex;gap:12px;margin-top:28px">
+              <div class="boot-b" style="width:120px;height:42px"></div>
+              <div class="boot-b" style="width:140px;height:42px"></div>
+            </div>
+          </div>
+          <div class="boot-b boot-photo"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
