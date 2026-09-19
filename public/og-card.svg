@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="24%" r="70%">
+      <stop offset="0" stop-color="#064e3b" stop-opacity="0.58"/>
+      <stop offset="0.48" stop-color="#111827" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#030712" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="line" x1="0" x2="1">
+      <stop stop-color="#34d399"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <clipPath id="portrait">
+      <rect x="890" y="120" width="220" height="280" rx="36"/>
+    </clipPath>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="22" stdDeviation="22" flood-color="#000" flood-opacity="0.42"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="#030712"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <path d="M0 520 C230 450 350 620 600 530 S970 420 1200 520 V630 H0Z" fill="#064e3b" opacity="0.14"/>
+  <g opacity="0.16" stroke="#94a3b8">
+    <path d="M48 64H1152M48 144H1152M48 224H1152M48 304H1152M48 384H1152M48 464H1152M48 544H1152"/>
+    <path d="M80 40V590M240 40V590M400 40V590M560 40V590M720 40V590M880 40V590M1040 40V590"/>
+  </g>
+
+  <g transform="translate(78 78)">
+    <circle cx="8" cy="8" r="8" fill="#34d399"/>
+    <text x="30" y="15" fill="#a7f3d0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="21" letter-spacing="2">PORTFOLIO · 2026</text>
+
+    <text x="0" y="142" fill="#f8fafc" font-family="Inter, Arial, sans-serif" font-size="62" font-weight="750">César Díaz</text>
+    <rect x="0" y="168" width="610" height="5" rx="2.5" fill="url(#line)"/>
+    <text x="0" y="234" fill="#6ee7b7" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="650">Backend Developer · Full Stack</text>
+    <text x="0" y="278" fill="#cbd5e1" font-family="Inter, Arial, sans-serif" font-size="27">Estudiante ISC · egreso 2027</text>
+
+    <g transform="translate(0 342)" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19">
+      <rect width="188" height="46" rx="23" fill="#111827" stroke="#34d399" stroke-opacity="0.34"/>
+      <text x="94" y="29" text-anchor="middle" fill="#d1fae5">APIs REST</text>
+      <rect x="204" width="188" height="46" rx="23" fill="#111827" stroke="#34d399" stroke-opacity="0.34"/>
+      <text x="298" y="29" text-anchor="middle" fill="#d1fae5">PostgreSQL</text>
+      <rect x="408" width="166" height="46" rx="23" fill="#111827" stroke="#34d399" stroke-opacity="0.34"/>
+      <text x="491" y="29" text-anchor="middle" fill="#d1fae5">Docker</text>
+    </g>
+
+    <text x="0" y="484" fill="#94a3b8" font-family="Inter, Arial, sans-serif" font-size="21">Sistemas seguros · Datos · Integraciones · Infraestructura</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="874" y="104" width="252" height="312" rx="48" fill="#111827" stroke="#34d399" stroke-opacity="0.48" stroke-width="2"/>
+    <image href="img/avatar.webp" x="890" y="120" width="220" height="280" preserveAspectRatio="xMidYMid slice" clip-path="url(#portrait)"/>
+  </g>
+  <g transform="translate(846 458)" font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+    <rect width="310" height="76" rx="18" fill="#07101f" stroke="#334155"/>
+    <circle cx="30" cy="27" r="7" fill="#34d399"/>
+    <text x="49" y="34" fill="#d1fae5" font-size="18">Disponible para oportunidades</text>
+    <text x="30" y="59" fill="#94a3b8" font-size="15">Morelia · Remoto / reubicación</text>
+  </g>
+</svg>

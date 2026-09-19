@@ -26,11 +26,11 @@ function App() {
         <SideRails />
         <main>
           <Header />
-          <Suspense fallback={<SectionSkeleton variant="split" />}><About /></Suspense>
           <Suspense fallback={<SectionSkeleton />}><Projects /></Suspense>
+          <Suspense fallback={<SectionSkeleton variant="split" />}><About /></Suspense>
           <Suspense fallback={<SectionSkeleton variant="split" />}><HomeLab /></Suspense>
-          <Suspense fallback={<SectionSkeleton />}><Education /></Suspense>
           <Suspense fallback={<SectionSkeleton />}><Skills /></Suspense>
+          <Suspense fallback={<SectionSkeleton />}><Education /></Suspense>
           <Suspense fallback={<SectionSkeleton variant="split" />}><Contact /></Suspense>
         </main>
         <ScrollToTop />

@@ -12,6 +12,12 @@ body { background: transparent; }
 
 ::selection { background: rgb(16 185 129 / 0.35); color: #fff; }
 
+:where(a, button, [role="button"]):focus-visible {
+  outline: 2px solid rgb(52 211 153 / 0.9);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
 /* ── Space helpers ───────────────────────────────────── */
 @utility text-glow { text-shadow: 0 0 24px rgb(16 185 129 / 0.45); }
 

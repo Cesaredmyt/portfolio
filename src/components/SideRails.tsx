@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { HiMail } from 'react-icons/hi';
 import { sections, sectionNumber, type SectionId } from '../data/sections';
 import { useActiveSection } from '../hooks/useActiveSection';
+import { useLanguage } from '../context/LanguageContext';
 
 const socials = [
   { href: 'https://github.com/Cesaredmyt', label: 'GitHub', Icon: FaGithub, external: true },
@@ -18,6 +19,7 @@ const Corner: React.FC<{ className: string }> = ({ className }) => (
 // Decoración fija a los lados; solo en pantallas anchas donde hay margen libre.
 const SideRails: React.FC = () => {
   const { active } = useActiveSection();
+  const { language, tr } = useLanguage();
   const current = sections.find((s) => s.id === active);
 
   return (
@@ -42,7 +44,7 @@ const SideRails: React.FC = () => {
           >
             <span className="text-emerald-400">{current ? sectionNumber(current.id) : '00'}</span> / {String(sections.length).padStart(2, '0')}
             <br />
-            {current ? current.label.toUpperCase() : 'INICIO'}
+            {current ? (language === 'es' ? current.label : current.labelEn).toUpperCase() : tr('INICIO', 'HOME')}
           </motion.p>
         </AnimatePresence>
       </div>
@@ -66,13 +68,14 @@ const SideRails: React.FC = () => {
       </div>
 
       {/* Riel derecho: índice de secciones como casillas */}
-      <nav aria-label="Índice de secciones" className="absolute right-7 top-1/2 -translate-y-1/2 flex flex-col items-end gap-3">
-        {sections.map(({ id, label }, i) => {
+      <nav aria-label={tr('Índice de secciones', 'Section index')} className="absolute right-7 top-1/2 -translate-y-1/2 flex flex-col items-end gap-3">
+        {sections.map(({ id, label, labelEn }, i) => {
           const on = active === id;
+          const localizedLabel = language === 'es' ? label : labelEn;
           return (
-            <a key={id} href={`#${id}`} className="rail-dot group pointer-events-auto flex items-center gap-3" aria-label={label}>
+            <a key={id} href={`#${id}`} className="rail-dot group pointer-events-auto flex items-center gap-3" aria-label={localizedLabel}>
               <span className="rail-dot-label font-mono text-[10px] tracking-widest text-gray-400 whitespace-nowrap">
-                {sectionNumber(id as SectionId)} {label}
+                {sectionNumber(id as SectionId)} {localizedLabel}
               </span>
               <span
                 className={`block rounded-[2px] border transition-all duration-500 ${

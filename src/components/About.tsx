@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { FaServer, FaShieldAlt, FaRobot } from 'react-icons/fa';
+import { FaServer, FaShieldAlt, FaDatabase } from 'react-icons/fa';
 import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
 import SpotlightCard from './ui/SpotlightCard';
+import { useLanguage, type Language } from '../context/LanguageContext';
 
 /* ── about-me.ts ────────────────────────────────────────── */
 type Token = { t: 'keyword' | 'var' | 'key' | 'str' | 'bool' | 'op'; v: string };
@@ -13,16 +14,27 @@ const op = (v: string): Token => ({ t: 'op', v });
 const key = (v: string): Token => ({ t: 'key', v });
 const list = (values: string[]): Token[] => values.flatMap((v, i) => (i === 0 ? [str(v)] : [op(', '), str(v)]));
 
-const lines: { indent: number; tokens: Token[] }[] = [
+type CodeLine = { indent: number; tokens: Token[] };
+
+const codeLines: Record<Language, CodeLine[]> = { es: [
   { indent: 0, tokens: [{ t: 'keyword', v: 'const ' }, { t: 'var', v: 'cesar' }, op(' = {')] },
   { indent: 1, tokens: [key('base'), op(': '), str('Morelia, MX'), op(',')] },
-  { indent: 1, tokens: [key('stack'), op(': ['), ...list(['TypeScript', 'Python', 'PostgreSQL']), op('],')] },
-  { indent: 1, tokens: [key('infra'), op(': ['), ...list(['Docker', 'Caddy', 'Authelia']), op('],')] },
+  { indent: 1, tokens: [key('backend'), op(': ['), ...list(['TypeScript', 'Python', 'Java']), op('],')] },
+  { indent: 1, tokens: [key('datos'), op(': ['), ...list(['PostgreSQL', 'Supabase', 'RLS']), op('],')] },
   { indent: 1, tokens: [key('estudiando'), op(': '), str('Google Cloud'), op(',')] },
   { indent: 1, tokens: [key('fuera_del_teclado'), op(': ['), ...list(['el cosmos', 'ajedrez', 'autos']), op('],')] },
   { indent: 1, tokens: [key('disponible'), op(': '), { t: 'bool', v: 'true' }] },
   { indent: 0, tokens: [op('};')] },
-];
+], en: [
+  { indent: 0, tokens: [{ t: 'keyword', v: 'const ' }, { t: 'var', v: 'cesar' }, op(' = {')] },
+  { indent: 1, tokens: [key('based_in'), op(': '), str('Morelia, MX'), op(',')] },
+  { indent: 1, tokens: [key('backend'), op(': ['), ...list(['TypeScript', 'Python', 'Java']), op('],')] },
+  { indent: 1, tokens: [key('data'), op(': ['), ...list(['PostgreSQL', 'Supabase', 'RLS']), op('],')] },
+  { indent: 1, tokens: [key('learning'), op(': '), str('Google Cloud'), op(',')] },
+  { indent: 1, tokens: [key('away_from_keyboard'), op(': ['), ...list(['space', 'chess', 'cars']), op('],')] },
+  { indent: 1, tokens: [key('available'), op(': '), { t: 'bool', v: 'true' }] },
+  { indent: 0, tokens: [op('};')] },
+] };
 
 const colorMap: Record<Token['t'], string> = {
   keyword: 'text-purple-400',
@@ -33,7 +45,7 @@ const colorMap: Record<Token['t'], string> = {
   op: 'text-gray-400',
 };
 
-const CodeWindow: React.FC = () => (
+const CodeWindow: React.FC<{ language: Language }> = ({ language }) => (
   <motion.div
     whileHover={{ y: -4 }}
     className="dark-surface group bg-[#0d1117] border border-white/8 hover:border-emerald-500/25 rounded-2xl overflow-hidden shadow-2xl shadow-black/40 transition-[border-color] duration-500"
@@ -51,7 +63,7 @@ const CodeWindow: React.FC = () => (
       variants={{ show: { transition: { staggerChildren: 0.07, delayChildren: 0.2 } } }}
       className="px-5 py-4 font-mono text-[12.5px] leading-7 overflow-x-auto"
     >
-      {lines.map((line, i) => (
+      {codeLines[language].map((line, i) => (
         <motion.div
           key={i}
           variants={{ hidden: { opacity: 0, x: -8 }, show: { opacity: 1, x: 0 } }}
@@ -71,70 +83,80 @@ const CodeWindow: React.FC = () => (
 
 /* ── Pilares ────────────────────────────────────────────── */
 const pillars = [
-  { Icon: FaServer, title: 'Backend y datos', text: 'APIs, esquemas PostgreSQL y seguridad a nivel de fila.', tone: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/25' },
-  { Icon: FaShieldAlt, title: 'Infraestructura', text: 'Servidores propios con SSO, backups probados y monitoreo.', tone: 'text-sky-300 bg-sky-500/10 border-sky-500/25' },
-  { Icon: FaRobot, title: 'IA con límites', text: 'Agentes con permisos segmentados y confirmación humana.', tone: 'text-indigo-300 bg-indigo-500/10 border-indigo-500/25' },
+  { Icon: FaServer, esTitle: 'Backend y APIs', enTitle: 'Backend and APIs', esText: 'Servicios REST, validación, webhooks y tareas programadas.', enText: 'REST services, validation, webhooks and scheduled jobs.', tone: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/25' },
+  { Icon: FaDatabase, esTitle: 'Datos', enTitle: 'Data', esText: 'Modelado relacional, PostgreSQL, consultas SQL y RLS.', enText: 'Relational modeling, PostgreSQL, SQL queries and RLS.', tone: 'text-sky-300 bg-sky-500/10 border-sky-500/25' },
+  { Icon: FaShieldAlt, esTitle: 'Seguridad y operación', enTitle: 'Security and operations', esText: 'RBAC, Docker, SSO, observabilidad y respaldos.', enText: 'RBAC, Docker, SSO, observability and backups.', tone: 'text-indigo-300 bg-indigo-500/10 border-indigo-500/25' },
 ];
 
 /* ── Trayectoria ────────────────────────────────────────── */
 const timeline = [
-  { year: '2022', title: 'Ingreso al Tecnológico de Morelia', detail: 'Ing. en Sistemas Computacionales' },
-  { year: '2025', title: 'ProjeXus', detail: 'Backend REST con Spring Boot' },
-  { year: '2026', title: 'IMPA · Detección de fraude · Kuni', detail: 'Líder backend, ML e Innovation Fest' },
-  { year: '2026', title: 'Google AI Professional Certificate', detail: 'Coursera · 7 cursos' },
-  { year: 'Hoy', title: 'Home Lab y Google Cloud', detail: 'Infraestructura propia · certificado en curso', now: true },
-  { year: '2027', title: 'Egreso', detail: 'Ingeniería en Sistemas', future: true },
+  { year: '2022', esTitle: 'Ingreso al Tecnológico de Morelia', enTitle: 'Started at Tecnológico de Morelia', esDetail: 'Ing. en Sistemas Computacionales', enDetail: 'B.S. in Computer Systems Engineering' },
+  { year: '2025', esTitle: 'ProjeXus', enTitle: 'ProjeXus', esDetail: 'Backend REST con Spring Boot', enDetail: 'REST backend with Spring Boot' },
+  { year: '2026', esTitle: 'IMPA · Detección de fraude · Kuni', enTitle: 'IMPA · Fraud Detection · Kuni', esDetail: 'Liderazgo backend, ML e Innovation Fest', enDetail: 'Backend leadership, ML and Innovation Fest' },
+  { year: '2026', esTitle: 'Google AI Professional Certificate', enTitle: 'Google AI Professional Certificate', esDetail: 'Coursera · 7 cursos', enDetail: 'Coursera · 7 courses' },
+  { year: 'Hoy', yearEn: 'Now', esTitle: 'Home Lab y Google Cloud', enTitle: 'Home Lab and Google Cloud', esDetail: 'Infraestructura propia · certificado en curso', enDetail: 'Self-managed infrastructure · certificate in progress', now: true },
+  { year: '2027', esTitle: 'Egreso', enTitle: 'Graduation', esDetail: 'Ingeniería en Sistemas', enDetail: 'Computer Systems Engineering', future: true },
 ];
 
-const About: React.FC = () => (
+const About: React.FC = () => {
+  const { language, tr } = useLanguage();
+
+  return (
   <section id="sobre-mi" className="py-24 px-6 md:px-12 scroll-mt-16">
     <div className="container mx-auto max-w-6xl">
-      <SectionHeading title="Sobre mí" index="01" />
+      <SectionHeading title={tr('Sobre mí', 'About me')} index="02" />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-14 items-start">
         <div>
           <Reveal>
             <p className="font-display text-2xl md:text-[1.7rem] leading-snug text-white mb-6">
-              Construyo el lado del software que no se ve:{' '}
-              <span className="text-emerald-300">los datos, los permisos y los servidores</span> que mantienen todo en pie.
+              {tr('Construyo productos full stack con una base sólida en backend: ', 'I build full-stack products on a strong backend foundation: ')}
+              <span className="text-emerald-300">{tr('APIs, modelos de datos y flujos seguros', 'APIs, data models and secure workflows')}</span>{' '}
+              {tr('conectados a interfaces útiles.', 'connected to useful interfaces.')}
             </p>
           </Reveal>
           <Reveal delay={0.08}>
             <p className="text-gray-400 leading-relaxed mb-4">
-              Estudio Ingeniería en Sistemas Computacionales en el Tecnológico de Morelia, con especialidad en
-              desarrollo de software y promedio de 94. He liderado el backend de plataformas en equipo y
-              desarrollé integraciones de mensajería para una plataforma de salud en un hackatón.
+              {tr(
+                'Actualmente curso Ingeniería en Sistemas Computacionales en el Tecnológico de Morelia, con egreso estimado en 2027, especialidad en desarrollo de software y promedio de 94. Durante la carrera he diseñado APIs REST, esquemas PostgreSQL, autenticación por roles e integraciones, además de conectarlas con aplicaciones en React y Next.js.',
+                'I am currently pursuing Computer Systems Engineering at Tecnológico de Morelia, with expected graduation in 2027, a software development specialization and a 94/100 average. During the degree I have designed REST APIs, PostgreSQL schemas, role-based authentication and integrations, and connected them to React and Next.js applications.',
+              )}
             </p>
           </Reveal>
           <Reveal delay={0.14}>
             <p className="text-gray-400 leading-relaxed mb-8">
-              Fuera de clases administro mi propio servidor: reverse proxy, SSO con doble factor, backups que
-              se prueban y agentes de IA que solo actúan con mi confirmación.
+              {tr(
+                'También administro un servidor Linux con Docker, reverse proxy, SSO, monitoreo y respaldos. Esa experiencia me ayuda a pensar en despliegue, seguridad y operación, no solo en escribir código.',
+                'I also manage a Linux server with Docker, a reverse proxy, SSO, monitoring and backups. That experience makes me think about deployment, security and operations—not only writing code.',
+              )}
             </p>
           </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {pillars.map(({ Icon, title, text, tone }, i) => (
-              <Reveal key={title} delay={0.1 + i * 0.08} className="h-full">
+            {pillars.map(({ Icon, esTitle, enTitle, esText, enText, tone }, i) => {
+              const title = language === 'es' ? esTitle : enTitle;
+              return (
+              <Reveal key={esTitle} delay={0.1 + i * 0.08} className="h-full">
                 <SpotlightCard tilt={8} className="group h-full glass border border-white/5 hover:border-white/15 rounded-xl p-4 transition-colors duration-300">
                   <span className={`w-9 h-9 rounded-lg border flex items-center justify-center mb-3 transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110 ${tone}`}>
                     <Icon size={14} />
                   </span>
                   <p className="font-display font-semibold text-white text-sm mb-1">{title}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed">{text}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">{language === 'es' ? esText : enText}</p>
                 </SpotlightCard>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         <div className="flex flex-col gap-8">
           <Reveal delay={0.1}>
-            <CodeWindow />
+            <CodeWindow language={language} />
           </Reveal>
 
           <Reveal delay={0.15}>
-            <p className="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 mb-4">Trayectoria</p>
+            <p className="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 mb-4">{tr('Trayectoria', 'Timeline')}</p>
             <motion.ol
               initial="hidden"
               whileInView="show"
@@ -145,7 +167,7 @@ const About: React.FC = () => (
               <span className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-emerald-500/60 via-white/10 to-transparent" />
               {timeline.map((t, i) => (
                 <motion.li
-                  key={t.title}
+                  key={t.esTitle}
                   variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
                   className="group relative pb-5 last:pb-0"
                 >
@@ -162,10 +184,10 @@ const About: React.FC = () => (
                     }`}
                   />
                   <div className="flex items-baseline gap-3">
-                    <span className={`font-mono text-xs w-9 flex-shrink-0 ${t.now ? 'text-emerald-400' : 'text-gray-500'}`}>{t.year}</span>
+                    <span className={`font-mono text-xs w-9 flex-shrink-0 ${t.now ? 'text-emerald-400' : 'text-gray-500'}`}>{language === 'en' && t.yearEn ? t.yearEn : t.year}</span>
                     <div className="transition-transform duration-300 group-hover:translate-x-1">
-                      <p className={`text-sm font-medium ${t.future ? 'text-gray-400' : 'text-gray-100'}`}>{t.title}</p>
-                      <p className="text-xs text-gray-500">{t.detail}</p>
+                      <p className={`text-sm font-medium ${t.future ? 'text-gray-400' : 'text-gray-100'}`}>{language === 'es' ? t.esTitle : t.enTitle}</p>
+                      <p className="text-xs text-gray-500">{language === 'es' ? t.esDetail : t.enDetail}</p>
                     </div>
                   </div>
                 </motion.li>
@@ -176,6 +198,7 @@ const About: React.FC = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default About;
