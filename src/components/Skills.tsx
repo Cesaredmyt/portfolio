@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import type { IconType } from 'react-icons';
-import { FaJava, FaPython, FaReact, FaNodeJs, FaGitAlt, FaDatabase, FaDesktop, FaServer, FaCheck } from 'react-icons/fa';
 import {
-  SiPostgresql, SiMysql, SiSpringboot, SiTypescript, SiJavascript, SiPhp, SiTailwindcss, SiNextdotjs, SiSupabase,
-  SiDocker, SiUbuntu, SiCaddy, SiTailscale, SiAuthelia, SiNetdata, SiGooglecloud, SiTwilio,
-  SiVitest, SiZod, SiReactquery, SiDotnet, SiEslint, SiPwa,
+  FaJava, FaPython, FaGitAlt, FaDatabase, FaDesktop, FaServer, FaCheck,
+  FaShieldAlt, FaExchangeAlt, FaClock, FaVial,
+} from 'react-icons/fa';
+import {
+  SiPostgresql, SiTypescript,
+  SiDocker, SiUbuntu, SiCaddy, SiTailscale, SiAuthelia, SiNetdata, SiGooglecloud,
+  SiVitest, SiZod, SiEslint, SiPwa,
 } from 'react-icons/si';
 import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
 import SpotlightCard from './ui/SpotlightCard';
+import { useLanguage } from '../context/LanguageContext';
 
 interface Skill {
   label: string;
@@ -22,12 +26,10 @@ interface Skill {
 const cardBase =
   'group h-full glass border border-white/5 hover:border-white/15 rounded-2xl p-6 flex flex-col transition-colors duration-300';
 
-const CardTitle: React.FC<{ title: string; skills: Skill[] }> = ({ title, skills }) => (
-  <div className="flex items-baseline justify-between gap-3 mb-5">
+const CardTitle: React.FC<{ title: string; detail: string }> = ({ title, detail }) => (
+  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-3 mb-5">
     <h3 className="font-display text-xl font-bold text-white">{title}</h3>
-    <span className="text-[11px] font-mono text-gray-600">
-      {skills.filter((s) => s.core).length} principales · {skills.length} total
-    </span>
+    <span className="text-xs font-mono text-gray-500 sm:text-right">{detail}</span>
   </div>
 );
 
@@ -37,14 +39,12 @@ const languages: (Skill & { file: string; code: string[] })[] = [
   { label: 'Python', Icon: FaPython, color: '#4B8BBE', core: true, file: 'modelo.py', code: ['modelo = XGBClassifier(n_estimators=400)', 'modelo.fit(X_train, y_train)'] },
   { label: 'SQL', Icon: FaDatabase, color: '#34D399', core: true, file: 'politicas.sql', code: ['create policy "por_unidad" on pacientes', '  using (unidad_id = auth_unidad());'] },
   { label: 'Java', Icon: FaJava, color: '#F89820', core: true, file: 'ConcursoController.java', code: ['@GetMapping("/concursos/{id}")', 'public Concurso buscar(@PathVariable Long id)'] },
-  { label: 'JavaScript', Icon: SiJavascript, color: '#F7DF1E', file: 'citas.js', code: ['const res = await fetch("/api/citas");', 'render(await res.json());'] },
-  { label: 'C#', Icon: SiDotnet, color: '#A179DC', file: 'Reservas.cs', code: ['var reserva = new Reserva(cliente);', 'await repo.GuardarAsync(reserva);'] },
-  { label: 'PHP', Icon: SiPhp, color: '#8993BE', file: 'reserva.php', code: ['$stmt = $pdo->prepare($sql);', '$stmt->execute([$habitacion]);'] },
 ];
 
 const CYCLE_MS = 3200;
 
 const LanguagesCard: React.FC = () => {
+  const { tr } = useLanguage();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduced = useReducedMotion();
@@ -58,7 +58,7 @@ const LanguagesCard: React.FC = () => {
 
   return (
     <SpotlightCard tilt={2} className={cardBase} onPointerEnter={() => setPaused(true)} onPointerLeave={() => setPaused(false)}>
-      <CardTitle title="Lenguajes" skills={languages} />
+      <CardTitle title={tr('Lenguajes', 'Languages')} detail={tr('uso principal', 'primary stack')} />
 
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-5 flex-1">
         <div className="flex flex-wrap md:flex-col gap-1.5 content-start">
@@ -130,19 +130,22 @@ const LanguagesCard: React.FC = () => {
 };
 
 /* ── 2. Infraestructura: terminal con docker ps ─────────── */
-const infra: (Skill & { status: string; learning?: boolean })[] = [
-  { label: 'docker', Icon: SiDocker, color: '#2496ED', status: 'contenedores', core: true },
-  { label: 'ubuntu', Icon: SiUbuntu, color: '#E95420', status: 'linux server', core: true },
+const infra: (Skill & { status: string; statusEn?: string; learning?: boolean })[] = [
+  { label: 'docker', Icon: SiDocker, color: '#2496ED', status: 'contenedores', statusEn: 'containers', core: true },
+  { label: 'ubuntu', Icon: SiUbuntu, color: '#E95420', status: 'servidor linux', statusEn: 'linux server', core: true },
   { label: 'caddy', Icon: SiCaddy, color: '#22B638', status: 'reverse proxy', core: true },
   { label: 'authelia', Icon: SiAuthelia, color: '#4B8BF5', status: 'sso + 2fa', core: true },
   { label: 'tailscale', Icon: SiTailscale, color: '#E5E7EB', status: 'vpn mesh', core: true },
-  { label: 'netdata', Icon: SiNetdata, color: '#00AB44', status: 'métricas' },
-  { label: 'google-cloud', Icon: SiGooglecloud, color: '#4285F4', status: 'aprendiendo', learning: true },
+  { label: 'netdata', Icon: SiNetdata, color: '#00AB44', status: 'métricas', statusEn: 'metrics' },
+  { label: 'google-cloud', Icon: SiGooglecloud, color: '#4285F4', status: 'aprendiendo', statusEn: 'learning', learning: true },
 ];
 
-const InfraCard: React.FC = () => (
+const InfraCard: React.FC = () => {
+  const { language, tr } = useLanguage();
+
+  return (
   <SpotlightCard tilt={3} className={cardBase}>
-    <CardTitle title="Infraestructura" skills={infra} />
+    <CardTitle title={tr('Infraestructura', 'Infrastructure')} detail={tr('operación práctica', 'hands-on operations')} />
     <div className="rounded-xl bg-[#0d1117] border border-white/5 p-4 font-mono text-[12px] flex-1 flex flex-col">
       <p className="text-gray-500 mb-3">
         <span className="text-emerald-400">cesar@homelab</span>:~$ docker ps
@@ -164,7 +167,7 @@ const InfraCard: React.FC = () => (
             <span className="brand-row-bar absolute left-0 top-1/2 h-4 w-0.5 rounded-full" />
             <s.Icon className={`brand-row-icon ${s.core ? 'w-4 h-4' : 'w-3.5 h-3.5 text-gray-500'}`} style={s.core ? { color: s.color } : undefined} />
             <span className={`w-24 truncate ${s.core ? 'text-gray-100 font-medium' : 'text-gray-400'}`}>{s.label}</span>
-            <span className="text-gray-600 flex-1 truncate">{s.status}</span>
+            <span className="text-gray-500 flex-1 truncate">{language === 'es' ? s.status : s.statusEn ?? s.status}</span>
             {s.learning ? (
               <span className="flex items-center gap-1.5 text-sky-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-sky-400" /> 22%
@@ -182,17 +185,18 @@ const InfraCard: React.FC = () => (
       </p>
     </div>
   </SpotlightCard>
-);
+  );
+};
 
 /* ── 3. Backend y datos: flujo cliente → api → bd ───────── */
 const backend: Skill[] = [
-  { label: 'Node.js', Icon: FaNodeJs, color: '#5FA04E', core: true },
-  { label: 'Spring Boot', Icon: SiSpringboot, color: '#6DB33F', core: true },
+  { label: 'APIs REST', Icon: FaServer, color: '#34D399', core: true },
   { label: 'PostgreSQL', Icon: SiPostgresql, color: '#6A9FD8', core: true },
-  { label: 'Supabase', Icon: SiSupabase, color: '#3ECF8E', core: true },
-  { label: 'MySQL', Icon: SiMysql, color: '#00A0C6' },
-  { label: 'Twilio', Icon: SiTwilio, color: '#F22F46' },
-  { label: 'Zod', Icon: SiZod, color: '#6C8EEF' },
+  { label: 'JWT y RBAC', Icon: FaShieldAlt, color: '#A78BFA', core: true },
+  { label: 'Modelado SQL', Icon: FaDatabase, color: '#38BDF8', core: true },
+  { label: 'Webhooks', Icon: FaExchangeAlt, color: '#F472B6' },
+  { label: 'Jobs y colas', Icon: FaClock, color: '#FBBF24' },
+  { label: 'Validación', Icon: SiZod, color: '#6C8EEF' },
 ];
 
 const FlowNode: React.FC<{ icon: React.ReactNode; label: string }> = ({ icon, label }) => (
@@ -239,35 +243,49 @@ const TieredChips: React.FC<{ skills: Skill[] }> = ({ skills }) => (
   </div>
 );
 
-const BackendCard: React.FC = () => (
+const BackendCard: React.FC = () => {
+  const { tr } = useLanguage();
+
+  const localizedBackend = backend.map((skill) => ({
+    ...skill,
+    label: skill.label === 'Modelado SQL' ? tr('Modelado SQL', 'SQL modeling')
+      : skill.label === 'Webhooks' ? 'Webhooks'
+        : skill.label === 'Jobs y colas' ? tr('Jobs y colas', 'Jobs and queues')
+          : skill.label === 'Validación' ? tr('Validación', 'Validation')
+            : skill.label,
+  }));
+
+  return (
   <SpotlightCard tilt={4} className={cardBase}>
-    <CardTitle title="Backend y datos" skills={backend} />
+    <CardTitle title={tr('Backend y datos', 'Backend and data')} detail={tr('capacidades clave', 'core capabilities')} />
     <div className="flex items-center gap-2 mb-6 px-1">
-      <FlowNode icon={<FaDesktop size={16} />} label="cliente" />
+      <FlowNode icon={<FaDesktop size={16} />} label={tr('cliente', 'client')} />
       <Wire delay="0s" />
       <FlowNode icon={<FaServer size={16} />} label="api" />
       <Wire delay="0.45s" />
       <FlowNode icon={<FaDatabase size={16} />} label="postgres" />
     </div>
-    <TieredChips skills={backend} />
+    <TieredChips skills={localizedBackend} />
   </SpotlightCard>
-);
+  );
+};
 
-/* ── 4. Frontend y calidad: ejecución de pruebas ────────── */
-const frontend: (Skill & { detail: string })[] = [
-  { label: 'Next.js', Icon: SiNextdotjs, color: '#E5E7EB', detail: 'SSR y rutas', core: true },
-  { label: 'React', Icon: FaReact, color: '#61DAFB', detail: 'componentes y estado', core: true },
-  { label: 'Tailwind', Icon: SiTailwindcss, color: '#38BDF8', detail: 'interfaces responsivas', core: true },
-  { label: 'Git', Icon: FaGitAlt, color: '#F05032', detail: 'ramas y pull requests', core: true },
-  { label: 'React Query', Icon: SiReactquery, color: '#FF4154', detail: 'caché de datos' },
-  { label: 'Vitest', Icon: SiVitest, color: '#FCC72B', detail: 'pruebas unitarias' },
-  { label: 'ESLint', Icon: SiEslint, color: '#8080F2', detail: 'calidad de código' },
-  { label: 'PWA', Icon: SiPwa, color: '#A78BFA', detail: 'app instalable' },
+/* ── 4. Entrega y calidad: prácticas aplicadas ─────────── */
+const delivery: (Skill & { detail: string; detailEn: string })[] = [
+  { label: 'Git', Icon: FaGitAlt, color: '#F05032', detail: 'ramas y pull requests', detailEn: 'branches and pull requests', core: true },
+  { label: 'Vitest', Icon: SiVitest, color: '#FCC72B', detail: 'pruebas unitarias', detailEn: 'unit tests', core: true },
+  { label: 'Pytest', Icon: FaVial, color: '#34D399', detail: 'pruebas en Python', detailEn: 'Python tests', core: true },
+  { label: 'Zod', Icon: SiZod, color: '#6C8EEF', detail: 'validación de entrada', detailEn: 'input validation', core: true },
+  { label: 'ESLint', Icon: SiEslint, color: '#8080F2', detail: 'análisis estático', detailEn: 'static analysis' },
+  { label: 'PWA', Icon: SiPwa, color: '#A78BFA', detail: 'entrega instalable', detailEn: 'installable delivery' },
 ];
 
-const FrontendCard: React.FC = () => (
+const DeliveryCard: React.FC = () => {
+  const { language, tr } = useLanguage();
+
+  return (
   <SpotlightCard tilt={4} className={cardBase}>
-    <CardTitle title="Frontend y calidad" skills={frontend} />
+    <CardTitle title={tr('Entrega y calidad', 'Delivery and quality')} detail={tr('prácticas aplicadas', 'applied practices')} />
     <motion.ul
       initial="hidden"
       whileInView="show"
@@ -275,7 +293,7 @@ const FrontendCard: React.FC = () => (
       variants={{ show: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } } }}
       className="font-mono space-y-0.5 flex-1"
     >
-      {frontend.map((s) => (
+      {delivery.map((s) => (
         <motion.li
           key={s.label}
           variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
@@ -290,22 +308,23 @@ const FrontendCard: React.FC = () => (
           </motion.span>
           <s.Icon className={`brand-row-icon flex-shrink-0 ${s.core ? 'w-4 h-4' : 'w-3.5 h-3.5 text-gray-500'}`} style={s.core ? { color: s.color } : undefined} />
           <span className={`whitespace-nowrap ${s.core ? 'text-gray-100 font-medium' : 'text-gray-400'}`}>{s.label}</span>
-          <span className="text-gray-600 truncate">› {s.detail}</span>
+          <span className="text-gray-500 truncate">› {language === 'es' ? s.detail : s.detailEn}</span>
         </motion.li>
       ))}
     </motion.ul>
     <p className="mt-4 pt-3 border-t border-white/5 font-mono text-[12px] text-gray-500">
-      Tests <span className="text-emerald-400">{frontend.length} passed</span> ({frontend.length})
+      <span className="text-emerald-400">✓</span> {tr('pruebas, validación y revisión antes de integrar', 'tests, validation and review before integration')}
     </p>
   </SpotlightCard>
-);
+  );
+};
 
 /* ── Complementarias (segundo plano) ────────────────────── */
 const complementary = [
-  { group: 'ML y datos', items: ['scikit-learn', 'XGBoost', 'Random Forest', 'Isolation Forest', 'Pandas', 'NumPy', 'CRISP-DM'] },
-  { group: 'Arquitectura', items: ['REST APIs', 'JWT / RBAC', 'Row Level Security', 'Webhooks', 'MVC', 'POO', 'Agile'] },
-  { group: 'Calidad en Python', items: ['Pytest', 'Ruff', 'Mypy'] },
-  { group: 'Self-hosting', items: ['CrowdSec', 'AdGuard Home', 'Uptime Kuma', 'Duplicati', 'n8n', 'Wiki.js', 'Vaultwarden', 'SearXNG'] },
+  { group: 'ML y evaluación', groupEn: 'ML and evaluation', items: ['scikit-learn', 'XGBoost', 'Random Forest', 'Isolation Forest', 'Pandas', 'NumPy', 'CRISP-DM'] },
+  { group: 'Full stack e integración', groupEn: 'Full stack and integration', items: ['Next.js', 'React', 'Tailwind CSS', 'Spring Boot', 'Supabase', 'Twilio', 'React Query'] },
+  { group: 'Experiencia adicional', groupEn: 'Additional experience', items: ['JavaScript', 'PHP', 'C#', 'MySQL', 'MVC', 'OOP'] },
+  { group: 'Operación self-hosted', groupEn: 'Self-hosted operations', items: ['CrowdSec', 'Uptime Kuma', 'Duplicati', 'n8n', 'Vaultwarden', 'SearXNG'] },
 ];
 
 /* ── Idiomas: medidor tipo tacómetro sobre la escala MCER ─ */
@@ -363,7 +382,7 @@ const LanguageGauge: React.FC<{ name: string; code: string; level: number; label
       </div>
 
       <div className="min-w-0">
-        <span className="inline-block text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border mb-2" style={{ color, borderColor: `${color}55` }}>
+        <span className="inline-block text-[11px] font-mono font-bold px-1.5 py-0.5 rounded border mb-2" style={{ color, borderColor: `${color}55` }}>
           {code}
         </span>
         <p className="font-display text-2xl font-bold text-white leading-none">{name}</p>
@@ -373,10 +392,13 @@ const LanguageGauge: React.FC<{ name: string; code: string; level: number; label
   );
 };
 
-const Skills: React.FC = () => (
+const Skills: React.FC = () => {
+  const { language, tr } = useLanguage();
+
+  return (
   <section id="habilidades" className="py-24 px-6 md:px-12 scroll-mt-16">
     <div className="container mx-auto max-w-6xl">
-      <SectionHeading index="05" title="Habilidades" subtitle="Lo que uso en el día a día, mostrado como lo verías trabajando conmigo." />
+      <SectionHeading index="04" title={tr('Habilidades', 'Skills')} subtitle={tr('Perfil backend con capacidad full stack: APIs, datos, seguridad, interfaces, despliegue y calidad de código.', 'Backend profile with full-stack capabilities: APIs, data, security, interfaces, deployment and code quality.')} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Reveal className="lg:col-span-2">
@@ -389,22 +411,22 @@ const Skills: React.FC = () => (
           <BackendCard />
         </Reveal>
         <Reveal delay={0.16}>
-          <FrontendCard />
+          <DeliveryCard />
         </Reveal>
       </div>
 
       <Reveal className="mt-10">
         <div className="rounded-2xl border border-dashed border-white/10 p-6">
-          <p className="text-sm font-medium text-gray-400 mb-5">También he trabajado con</p>
+          <p className="text-sm font-medium text-gray-400 mb-5">{tr('Tecnologías complementarias', 'Complementary technologies')}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {complementary.map(({ group, items }) => (
+            {complementary.map(({ group, groupEn, items }) => (
               <div key={group}>
-                <p className="text-[11px] font-mono uppercase tracking-widest text-gray-600 mb-2.5">{group}</p>
+                <p className="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2.5">{language === 'es' ? group : groupEn}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {items.map((t) => (
                     <span
                       key={t}
-                      className="text-[11px] px-2 py-0.5 rounded-md border border-white/5 text-gray-500 transition-colors duration-200 hover:text-emerald-300 hover:border-emerald-500/30 cursor-default"
+                      className="text-xs px-2 py-0.5 rounded-md border border-white/5 text-gray-500 transition-colors duration-200 hover:text-emerald-300 hover:border-emerald-500/30 cursor-default"
                     >
                       {t}
                     </span>
@@ -418,14 +440,15 @@ const Skills: React.FC = () => (
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
         <Reveal>
-          <LanguageGauge name="Español" code="ES" level={6} label="Lengua materna" color="#34D399" />
+          <LanguageGauge name={tr('Español', 'Spanish')} code="ES" level={6} label={tr('Lengua materna', 'Native language')} color="#34D399" />
         </Reveal>
         <Reveal delay={0.1}>
-          <LanguageGauge name="Inglés" code="EN" level={3} label="B2 · Upper Intermediate" color="#60A5FA" />
+          <LanguageGauge name={tr('Inglés', 'English')} code="EN" level={3} label="B2 · Upper Intermediate" color="#60A5FA" />
         </Reveal>
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Skills;

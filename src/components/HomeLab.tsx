@@ -4,7 +4,8 @@ import { FaCheck, FaTimes, FaRobot, FaTelegramPlane, FaUserAstronaut, FaChessPaw
 import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
 import SpotlightCard from './ui/SpotlightCard';
-import { agents, layers, nodes, ringLabels } from '../data/homelab';
+import { agents, layers, nodes, ringLabels, ringLabelsEn } from '../data/homelab';
+import { useLanguage } from '../context/LanguageContext';
 
 const RADII = [42, 86, 128, 170, 212];
 const SAT_ORBIT = 242;
@@ -14,7 +15,7 @@ const polar = (r: number, deg: number) => {
   return { x: r * Math.cos(rad), y: r * Math.sin(rad) };
 };
 
-const OrbitDiagram: React.FC<{ activeRing: number; onRing: (ring: number) => void }> = ({ activeRing, onRing }) => {
+const OrbitDiagram: React.FC<{ activeRing: number; onRing: (ring: number) => void; labels: string[]; ariaLabel: string }> = ({ activeRing, onRing, labels, ariaLabel }) => {
   const satRef = useRef<SVGGElement>(null);
   const labelRefs = useRef<(SVGGElement | null)[]>([]);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -37,7 +38,7 @@ const OrbitDiagram: React.FC<{ activeRing: number; onRing: (ring: number) => voi
   const dim = (ring: number) => activeRing !== -1 && activeRing !== ring;
 
   return (
-    <svg ref={svgRef} viewBox="-270 -270 540 540" className="w-full h-auto select-none" role="img" aria-label="Diagrama orbital de la arquitectura del home lab">
+    <svg ref={svgRef} viewBox="-270 -270 540 540" className="w-full h-auto select-none" role="img" aria-label={ariaLabel}>
       <defs>
         <radialGradient id="core-glow">
           <stop offset="0%" stopColor="rgb(16 185 129)" stopOpacity="0.55" />
@@ -64,9 +65,9 @@ const OrbitDiagram: React.FC<{ activeRing: number; onRing: (ring: number) => voi
               x={0}
               y={-r + 13}
               textAnchor="middle"
-              className={`font-mono text-[9px] uppercase tracking-[0.2em] transition-all duration-300 ${on ? 'fill-emerald-400' : 'fill-gray-600'}`}
+              className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${on ? 'fill-emerald-400' : 'fill-gray-500'}`}
             >
-              {ringLabels[ring]}
+              {labels[ring]}
             </text>
           </g>
         );
@@ -132,7 +133,9 @@ const OrbitDiagram: React.FC<{ activeRing: number; onRing: (ring: number) => voi
 };
 
 const HomeLab: React.FC = () => {
+  const { language, tr } = useLanguage();
   const [activeId, setActiveId] = useState('agentes');
+  const [showAgents, setShowAgents] = useState(false);
   const active = layers.find((l) => l.id === activeId)!;
 
   const selectRing = (ring: number) => {
@@ -148,15 +151,20 @@ const HomeLab: React.FC = () => {
           title="Home Lab"
           badge={
             <span className="flex items-center gap-2 text-xs font-medium text-emerald-300 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 rounded-full">
-              <FaUserAstronaut size={12} /> Proyecto personal
+              <FaUserAstronaut size={12} /> {tr('Proyecto personal', 'Personal project')}
             </span>
           }
-          subtitle="Mi propio servidor self-hosted, diseñado, montado y mantenido por mí. Lo construí por fases: primero resiliencia, luego seguridad de acceso tipo empresarial y, al final, una plataforma de agentes de IA con permisos segmentados."
+          subtitle={tr('Servidor self-hosted que diseño, despliego y opero: red, identidad, respaldos, observabilidad y agentes con permisos segmentados.', 'A self-hosted server I design, deploy and operate: networking, identity, backups, observability and agents with segmented permissions.')}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-start">
           <Reveal className="lg:sticky lg:top-24">
-            <OrbitDiagram activeRing={active.ring} onRing={selectRing} />
+            <OrbitDiagram
+              activeRing={active.ring}
+              onRing={selectRing}
+              labels={language === 'es' ? ringLabels : ringLabelsEn}
+              ariaLabel={tr('Diagrama orbital de la arquitectura del home lab', 'Orbital diagram of the home lab architecture')}
+            />
           </Reveal>
 
           <div className="flex flex-col gap-2">
@@ -175,8 +183,8 @@ const HomeLab: React.FC = () => {
                   >
                     <div className="flex items-center gap-3">
                       <span className={`font-mono text-xs ${on ? 'text-emerald-400' : 'text-gray-600'}`}>0{i + 1}</span>
-                      <span className={`font-display font-semibold ${on ? 'text-white' : 'text-gray-300'}`}>{layer.title}</span>
-                      <span className="ml-auto text-xs text-gray-500 hidden sm:block">{layer.short}</span>
+                      <span className={`font-display font-semibold ${on ? 'text-white' : 'text-gray-300'}`}>{language === 'es' ? layer.title : layer.titleEn}</span>
+                      <span className="ml-auto text-xs text-gray-500 hidden sm:block">{language === 'es' ? layer.short : layer.shortEn}</span>
                     </div>
                     <AnimatePresence initial={false}>
                       {on && (
@@ -191,11 +199,11 @@ const HomeLab: React.FC = () => {
                             {layer.items.map((it) => (
                               <li key={it.name} className="text-sm text-gray-400 flex gap-2">
                                 <span className="text-emerald-500 mt-0.5">›</span>
-                                <span><span className="font-mono text-gray-200">{it.name}</span> — {it.detail}</span>
+                                <span><span className="font-mono text-gray-200">{it.name}</span> — {language === 'es' ? it.detail : it.detailEn}</span>
                               </li>
                             ))}
                           </ul>
-                          <p className="mt-4 text-sm text-emerald-300/90 border-l-2 border-emerald-500/40 pl-3">{layer.why}</p>
+                          <p className="mt-4 text-sm text-emerald-300/90 border-l-2 border-emerald-500/40 pl-3">{language === 'es' ? layer.why : layer.whyEn}</p>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -206,13 +214,26 @@ const HomeLab: React.FC = () => {
           </div>
         </div>
 
-        {/* Agentes */}
-        <div className="mt-24">
+        <div className="mt-12 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAgents((value) => !value)}
+            aria-expanded={showAgents}
+            className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300 border border-emerald-500/25 hover:bg-emerald-500/10 px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
+          >
+            <FaRobot size={13} />
+            {showAgents ? tr('Ocultar modelo de seguridad de agentes', 'Hide agent security model') : tr('Explorar seguridad de agentes', 'Explore agent security')}
+          </button>
+        </div>
+
+        <AnimatePresence initial={false}>
+        {showAgents && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+        <div className="mt-16">
           <Reveal className="text-center mb-10">
-            <h3 className="font-display text-3xl md:text-4xl font-bold text-white">Dos agentes, dos niveles de confianza</h3>
+            <h3 className="font-display text-3xl md:text-4xl font-bold text-white">{tr('Dos agentes, dos niveles de confianza', 'Two agents, two trust levels')}</h3>
             <p className="text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
-              La mayoría de proyectos con IA son un wrapper de API. Aquí el foco es la seguridad alrededor
-              del agente: segmentación de permisos, sandboxing y menor privilegio sobre infraestructura real.
+              {tr('El foco no es solo usar IA: es aplicar segmentación de permisos, sandboxing y menor privilegio sobre infraestructura real.', 'The focus is not merely using AI: it is applying permission boundaries, sandboxing and least privilege to real infrastructure.')}
             </p>
           </Reveal>
 
@@ -230,13 +251,13 @@ const HomeLab: React.FC = () => {
                       <p className="font-display text-xl font-bold text-white flex items-center gap-2">
                         {agent.name}
                         <span
-                          title={i === 0 ? 'Peón: pocos movimientos, ningún acceso a la infraestructura' : 'Torre: más alcance, siempre bajo reglas'}
+                          title={i === 0 ? tr('Peón: pocos movimientos, ningún acceso a la infraestructura', 'Pawn: limited moves and no infrastructure access') : tr('Torre: más alcance, siempre bajo reglas', 'Rook: broader reach, always constrained by rules')}
                           className="agent-piece text-gray-600 group-hover:text-gray-300"
                         >
                           {i === 0 ? <FaChessPawn size={13} /> : <FaChessRook size={13} />}
                         </span>
                       </p>
-                      <p className="text-xs text-gray-500">{agent.role} · <span className="font-mono">{agent.channel}</span></p>
+                      <p className="text-xs text-gray-500">{language === 'es' ? agent.role : agent.roleEn} · <span className="font-mono">{language === 'es' ? agent.channel : agent.channelEn}</span></p>
                     </div>
                   </div>
                   <ul className="space-y-2.5">
@@ -247,7 +268,7 @@ const HomeLab: React.FC = () => {
                         }`}>
                           {p.ok ? <FaCheck size={9} /> : <FaTimes size={9} />}
                         </span>
-                        <span className={p.ok ? 'text-gray-300' : 'text-gray-500 line-through decoration-red-500/40'}>{p.label}</span>
+                        <span className={p.ok ? 'text-gray-300' : 'text-gray-500 line-through decoration-red-500/40'}>{language === 'es' ? p.label : p.labelEn}</span>
                       </li>
                     ))}
                   </ul>
@@ -256,6 +277,9 @@ const HomeLab: React.FC = () => {
             ))}
           </div>
         </div>
+        </motion.div>
+        )}
+        </AnimatePresence>
       </div>
     </section>
   );

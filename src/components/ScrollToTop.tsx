@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from 'motion/react';
 import { useLenis } from 'lenis/react';
+import { useLanguage } from '../context/LanguageContext';
 
 // Tacómetro: la aguja sube de 0 a la zona roja conforme avanzas en la página.
 const START = -120;
@@ -20,6 +21,7 @@ const describeArc = (from: number, to: number, r = R) => {
 };
 
 const ScrollToTop: React.FC = () => {
+  const { tr } = useLanguage();
   const [visible, setVisible] = useState(false);
   const { scrollYProgress } = useScroll();
   const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 18 });
@@ -45,7 +47,7 @@ const ScrollToTop: React.FC = () => {
   return (
     <motion.button
       onClick={goTop}
-      aria-label="Volver arriba"
+      aria-label={tr('Volver arriba', 'Back to top')}
       whileHover={{ scale: 1.12 }}
       whileTap={{ scale: 0.92 }}
       animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16, pointerEvents: visible ? 'auto' : 'none' }}

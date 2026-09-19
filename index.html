@@ -4,15 +4,60 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/img/c.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="César Enrique Díaz Maldonado — backend, infraestructura self-hosted e IA aplicada. Morelia, México." />
+    <meta name="description" content="Portafolio de César Díaz, estudiante de Ingeniería en Sistemas con enfoque backend y capacidad full stack: APIs REST, PostgreSQL, TypeScript y Docker." />
     <meta name="theme-color" content="#030712" />
-    <title>César Díaz — Backend, infraestructura e IA</title>
+    <meta name="author" content="César Enrique Díaz Maldonado" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://portfolio-xplq.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:title" content="César Díaz — Portfolio" />
+    <meta property="og:description" content="Estudiante de Ingeniería en Sistemas con enfoque backend y capacidad full stack: APIs REST, PostgreSQL, seguridad y Docker." />
+    <meta property="og:url" content="https://portfolio-xplq.vercel.app/" />
+    <meta property="og:image" content="https://portfolio-xplq.vercel.app/og-card.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="César Díaz — Estudiante de Ingeniería en Sistemas con enfoque Backend y Full Stack" />
+    <meta property="og:site_name" content="Portafolio de César Díaz" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="César Díaz — Portfolio" />
+    <meta name="twitter:description" content="Estudiante de Ingeniería en Sistemas con enfoque backend: APIs REST, PostgreSQL, seguridad y Docker." />
+    <meta name="twitter:image" content="https://portfolio-xplq.vercel.app/og-card.png" />
+    <title>César Díaz — Portfolio</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "César Enrique Díaz Maldonado",
+        "url": "https://portfolio-xplq.vercel.app/",
+        "image": "https://portfolio-xplq.vercel.app/img/avatar.webp",
+        "jobTitle": "Computer Systems Engineering Student | Backend Developer",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Morelia",
+          "addressRegion": "Michoacán",
+          "addressCountry": "MX"
+        },
+        "sameAs": [
+          "https://github.com/Cesaredmyt",
+          "https://linkedin.com/in/cesarenriquediazmaldonado"
+        ],
+        "knowsAbout": ["Backend development", "Full stack development", "REST APIs", "PostgreSQL", "TypeScript", "React", "Next.js", "Python", "Java", "Docker"]
+      }
+    </script>
 
     <!-- Aplica el tema guardado antes de pintar: evita el destello oscuro→claro -->
     <script>
       try {
         var t = localStorage.getItem('portfolio-theme');
         if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        var l = localStorage.getItem('portfolio-language');
+        if (l === 'en' || l === 'es') document.documentElement.lang = l;
       } catch (e) {}
     </script>
 

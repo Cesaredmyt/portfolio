@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
 import { FaSun, FaMoon, FaDownload, FaChessKnight } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 import { sections } from '../data/sections';
 import { useActiveSection } from '../hooks/useActiveSection';
 
 const Nav: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { theme, toggle } = useTheme();
+  const { language, setLanguage, tr } = useLanguage();
   const { active, scrollY, direction } = useActiveSection();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
@@ -40,7 +42,7 @@ const Nav: React.FC = () => {
           </a>
 
           <ul className="hidden lg:flex items-center gap-0.5 rounded-xl p-1 nav-links">
-            {sections.map(({ id, label }) => {
+            {sections.map(({ id, label, labelEn }) => {
               const on = active === id;
               return (
                 <li key={id}>
@@ -57,7 +59,7 @@ const Nav: React.FC = () => {
                         transition={{ type: 'spring', stiffness: 400, damping: 34 }}
                       />
                     )}
-                    <span className="relative">{label}</span>
+                    <span className="relative">{language === 'es' ? label : labelEn}</span>
                   </a>
                 </li>
               );
@@ -65,9 +67,25 @@ const Nav: React.FC = () => {
           </ul>
 
           <div className="flex items-center gap-1.5">
+            <div role="group" aria-label={tr('Seleccionar idioma', 'Select language')} className="flex items-center rounded-lg border border-white/10 p-0.5">
+              {(['es', 'en'] as const).map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => setLanguage(code)}
+                  aria-pressed={language === code}
+                  className={`px-2 py-1.5 rounded-md text-[11px] font-mono font-bold transition-colors cursor-pointer ${
+                    language === code ? 'bg-emerald-400 text-gray-950' : 'text-gray-500 hover:text-white'
+                  }`}
+                >
+                  {code.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
             <button
               onClick={toggle}
-              aria-label={theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+              aria-label={theme === 'dark' ? tr('Cambiar a tema claro', 'Switch to light theme') : tr('Cambiar a tema oscuro', 'Switch to dark theme')}
               className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors duration-200 cursor-pointer"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -89,12 +107,12 @@ const Nav: React.FC = () => {
               className="shine group hidden sm:flex items-center gap-2 text-xs font-semibold text-gray-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-2 rounded-lg transition-colors duration-200"
             >
               <FaDownload size={11} className="transition-transform duration-300 group-hover:translate-y-0.5" />
-              Descargar CV
+              {tr('Descargar CV', 'Download résumé')}
             </a>
 
             <button
               onClick={() => setOpen((o) => !o)}
-              aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+              aria-label={open ? tr('Cerrar menú', 'Close menu') : tr('Abrir menú', 'Open menu')}
               aria-expanded={open}
               className="lg:hidden w-9 h-9 flex flex-col items-center justify-center gap-[5px] rounded-lg text-gray-300 hover:bg-white/5 cursor-pointer"
             >
@@ -119,21 +137,21 @@ const Nav: React.FC = () => {
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="lg:hidden overflow-hidden px-3"
             >
-              {sections.map(({ id, label }, i) => (
+              {sections.map(({ id, label, labelEn }, i) => (
                 <motion.li key={id} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.03 * i }}>
                   <a
                     href={`#${id}`}
                     onClick={() => setOpen(false)}
                     className={`flex items-center justify-between py-3 border-b border-white/5 text-sm ${active === id ? 'text-emerald-400' : 'text-gray-300'}`}
                   >
-                    {label}
+                    {language === 'es' ? label : labelEn}
                     <span className="font-mono text-[11px] text-gray-600">0{i + 1}</span>
                   </a>
                 </motion.li>
               ))}
               <li>
                 <a href="/cv.pdf" download className="flex items-center gap-2 py-3 text-sm text-emerald-400">
-                  <FaDownload size={11} /> Descargar CV
+                  <FaDownload size={11} /> {tr('Descargar CV', 'Download résumé')}
                 </a>
               </li>
             </motion.ul>

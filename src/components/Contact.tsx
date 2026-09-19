@@ -6,15 +6,17 @@ import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
 import Magnetic from './ui/Magnetic';
 import SpotlightCard from './ui/SpotlightCard';
+import { useLanguage, type Language } from '../context/LanguageContext';
 
 const EMAIL = 'dcesar664@gmail.com';
 
-const channels: { Icon: IconType; label: string; value: string; hint: string; href: string; color: string; external?: boolean }[] = [
+const channels: { Icon: IconType; label: string; labelEn?: string; value: string; hint: string; hintEn: string; href: string; color: string; external?: boolean }[] = [
   {
     Icon: FaLinkedin,
     label: 'LinkedIn',
     value: 'cesarenriquediazmaldonado',
     hint: 'Conectemos',
+    hintEn: 'Let’s connect',
     href: 'https://linkedin.com/in/cesarenriquediazmaldonado',
     color: '#0A66C2',
     external: true,
@@ -24,6 +26,7 @@ const channels: { Icon: IconType; label: string; value: string; hint: string; hr
     label: 'GitHub',
     value: 'Cesaredmyt',
     hint: 'Revisa mi código',
+    hintEn: 'Review my code',
     href: 'https://github.com/Cesaredmyt',
     color: '#A78BFA',
     external: true,
@@ -31,39 +34,48 @@ const channels: { Icon: IconType; label: string; value: string; hint: string; hr
   {
     Icon: FaPhoneAlt,
     label: 'Teléfono',
+    labelEn: 'Phone',
     value: '+52 417 130 7288',
     hint: 'Llámame',
+    hintEn: 'Call me',
     href: 'tel:+524171307288',
     color: '#34D399',
   },
 ];
 
-function useMoreliaTime() {
-  const read = () => {
-    const parts = new Intl.DateTimeFormat('es-MX', {
-      hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Mexico_City',
-    }).formatToParts(new Date());
-    const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
-    return { hh: get('hour'), mm: get('minute') };
-  };
-  const [time, setTime] = useState(read);
+function getMoreliaTime(language: Language) {
+  const parts = new Intl.DateTimeFormat(language === 'es' ? 'es-MX' : 'en-US', {
+    hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Mexico_City',
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  return { hh: get('hour'), mm: get('minute') };
+}
+
+function useMoreliaTime(language: Language) {
+  const [time, setTime] = useState(() => getMoreliaTime(language));
   useEffect(() => {
-    const id = setInterval(() => setTime(read()), 20_000);
+    const read = () => setTime(getMoreliaTime(language));
+    read();
+    const id = setInterval(read, 20_000);
     return () => clearInterval(id);
-  }, []);
+  }, [language]);
   return time;
 }
 
 /* Franja gigante: frases cortas que alternan relleno con degradado y contorno */
-const phrases = ['¿Hablamos?', 'Escríbeme', 'Disponible', 'Construyamos algo'];
-
 const Spark: React.FC = () => (
   <svg viewBox="0 0 24 24" className="spark w-8 h-8 md:w-12 md:h-12 flex-shrink-0 mx-4 md:mx-6" aria-hidden="true">
     <path d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z" fill="currentColor" />
   </svg>
 );
 
-const KineticBand: React.FC = () => (
+const KineticBand: React.FC = () => {
+  const { language } = useLanguage();
+  const phrases = language === 'es'
+    ? ['¿Hablamos?', 'Escríbeme', 'Disponible', 'Construyamos algo']
+    : ['Let’s talk', 'Get in touch', 'Available', 'Let’s build something'];
+
+  return (
   <div aria-hidden="true" className="relative mb-14 overflow-hidden py-3 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
     <div className="flex w-max animate-marquee [animation-duration:34s]">
       {[0, 1].map((copy) => (
@@ -84,11 +96,13 @@ const KineticBand: React.FC = () => (
       ))}
     </div>
   </div>
-);
+  );
+};
 
 /* Ubicación: radar sobre Morelia, hora local con dos puntos parpadeando y día/noche */
 const LocationTile: React.FC = () => {
-  const { hh, mm } = useMoreliaTime();
+  const { language, tr } = useLanguage();
+  const { hh, mm } = useMoreliaTime(language);
   const hour = Number(hh);
   const day = hour >= 7 && hour < 19;
 
@@ -103,7 +117,7 @@ const LocationTile: React.FC = () => {
 
       <span className="relative flex items-center gap-2 text-[11px] font-mono text-gray-400">
         {day ? <FaSun className="text-amber-300" size={12} /> : <FaMoon className="text-indigo-300" size={11} />}
-        {day ? 'de día en Morelia' : 'de noche en Morelia'}
+        {day ? tr('de día en Morelia', 'daytime in Morelia') : tr('de noche en Morelia', 'nighttime in Morelia')}
       </span>
 
       <span className="relative mt-auto">
@@ -136,6 +150,7 @@ const ChessCorner: React.FC = () => (
 );
 
 const Contact: React.FC = () => {
+  const { language, tr } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -151,7 +166,7 @@ const Contact: React.FC = () => {
   return (
     <section id="contacto" className="relative pt-24 pb-10 px-6 md:px-12 scroll-mt-16">
       <div className="container mx-auto max-w-6xl">
-        <SectionHeading index="06" title="Contacto" subtitle="¿Tienes un proyecto o una oportunidad? Escríbeme, respondo rápido." />
+        <SectionHeading index="06" title={tr('Contacto', 'Contact')} subtitle={tr('¿Tienes una vacante backend o full stack donde pueda aportar? Escríbeme.', 'Have a backend or full-stack opportunity where I can contribute? Get in touch.')} />
       </div>
 
       <KineticBand />
@@ -170,14 +185,14 @@ const Contact: React.FC = () => {
                   <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
                   <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
                 </span>
-                Disponible para prácticas y puestos junior
+                {tr('Disponible para prácticas y puestos junior', 'Available for internships and junior roles')}
               </span>
 
               <h3 className="font-display text-4xl md:text-6xl font-bold text-white leading-[0.95] tracking-tight mb-4">
-                Tu turno<br /><span className="text-gradient-move">de mover.</span>
+                {tr('Tu turno', 'Your move')}<br /><span className="text-gradient-move">{tr('de mover.', 'starts here.')}</span>
               </h3>
               <p className="text-gray-400 leading-relaxed max-w-md mb-6">
-                Si buscas a alguien para backend, infraestructura o proyectos con IA, cuéntame qué tienes en mente.
+                {tr('Busco oportunidades junior full stack con enfoque backend, donde pueda aportar en APIs, datos, integraciones e interfaces.', 'I am looking for junior backend or full-stack opportunities where I can contribute to APIs, data, integrations and interfaces.')}
               </p>
 
               <div className="relative z-10 flex flex-wrap items-center gap-3 mb-8">
@@ -187,17 +202,17 @@ const Contact: React.FC = () => {
                 <button
                   type="button"
                   onClick={copyEmail}
-                  aria-label="Copiar correo"
+                  aria-label={tr('Copiar correo', 'Copy email')}
                   className="relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition-colors cursor-pointer min-w-[92px] justify-center"
                 >
                   <AnimatePresence mode="wait" initial={false}>
                     {copied ? (
                       <motion.span key="ok" initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5 text-emerald-300">
-                        <FaCheck size={10} /> Copiado
+                        <FaCheck size={10} /> {tr('Copiado', 'Copied')}
                       </motion.span>
                     ) : (
                       <motion.span key="copy" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -6, opacity: 0 }} className="flex items-center gap-1.5">
-                        <FaCopy size={10} /> Copiar
+                        <FaCopy size={10} /> {tr('Copiar', 'Copy')}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -210,7 +225,7 @@ const Contact: React.FC = () => {
                     href={`mailto:${EMAIL}`}
                     className="shine group/cta inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-sm rounded-xl transition-colors duration-200 shadow-lg shadow-emerald-500/25"
                   >
-                    Enviar un mensaje
+                    {tr('Enviar un mensaje', 'Send a message')}
                     <FaArrowRight size={12} className="transition-transform duration-300 group-hover/cta:translate-x-1" />
                   </a>
                 </Magnetic>
@@ -221,7 +236,7 @@ const Contact: React.FC = () => {
                     className="group/cv inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium rounded-xl transition-colors duration-200"
                   >
                     <FaDownload size={12} className="transition-transform duration-300 group-hover/cv:translate-y-0.5" />
-                    Descargar CV
+                    {tr('Descargar CV', 'Download résumé')}
                   </a>
                 </Magnetic>
               </div>
@@ -230,7 +245,9 @@ const Contact: React.FC = () => {
           </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 auto-rows-fr">
-            {channels.map(({ Icon, label, value, hint, href, color, external }, i) => (
+            {channels.map(({ Icon, label, labelEn, value, hint, hintEn, href, color, external }, i) => {
+              const localizedLabel = language === 'es' ? label : labelEn ?? label;
+              return (
               <Reveal key={label} delay={0.08 * (i + 1)} className="h-full">
                 <a
                   href={href}
@@ -252,13 +269,14 @@ const Contact: React.FC = () => {
                   </span>
 
                   <span className="relative mt-6">
-                    <span className="block font-display text-lg font-bold text-white leading-tight">{label}</span>
+                    <span className="block font-display text-lg font-bold text-white leading-tight">{localizedLabel}</span>
                     <span className="block text-[12px] font-mono text-gray-400 truncate mt-0.5">{value}</span>
-                    <span className="channel-hint block text-[11px] font-medium mt-2">{hint} →</span>
+                    <span className="channel-hint block text-xs font-medium mt-2">{language === 'es' ? hint : hintEn} →</span>
                   </span>
                 </a>
               </Reveal>
-            ))}
+              );
+            })}
 
             <Reveal delay={0.32} className="h-full">
               <LocationTile />
