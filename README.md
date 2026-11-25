@@ -8,15 +8,16 @@ Aplicación web de portafolio profesional de un **estudiante de Ingeniería en S
 
 ## Descripción
 
-El proyecto está construido como una Single Page Application con React y TypeScript. La información se organiza para priorizar evidencia técnica: casos de estudio, participación individual, resultados verificables, diagramas de arquitectura y recorridos funcionales.
+El proyecto está construido como una Single Page Application con React y TypeScript. La información se organiza para priorizar evidencia técnica: proyectos destacados, participación individual, certificaciones verificables, diagramas de arquitectura y recorridos funcionales.
 
 La implementación no requiere servicios de backend ni variables de entorno para ejecutarse. El resultado de producción se genera como un conjunto de archivos estáticos compatible con Vercel y otros proveedores de hosting estático.
 
 ## Características principales
 
 - Posicionamiento profesional centrado en desarrollo backend, datos, seguridad e integraciones.
-- Casos de estudio con problema, contribución y resultado.
-- Vistas interactivas de resultado, arquitectura backend y flujo funcional.
+- Proyectos destacados con caso de estudio: problema, contribución y resultado.
+- Vistas interactivas de resultado, arquitectura y flujo funcional.
+- Certificaciones con enlaces de verificación.
 - Métricas técnicas contextualizadas y tecnologías prioritarias por proyecto.
 - Selector de idioma español/inglés con persistencia en `localStorage`.
 - Temas claro y oscuro con persistencia local.
@@ -40,7 +41,7 @@ flowchart TD
     App --> Shell["Navegación, fondo y controles globales"]
     App --> Sections["Secciones con carga diferida"]
 
-    Sections --> Projects["Casos de estudio"]
+    Sections --> Projects["Proyectos"]
     Sections --> Profile["Perfil, habilidades y formación"]
     Sections --> Infra["Home Lab"]
     Sections --> Contact["Contacto"]
@@ -77,13 +78,23 @@ flowchart TD
 | Iconografía | React Icons 5 | Iconos de interfaz y tecnologías |
 | Calidad | ESLint 9 | Análisis estático del código |
 
-## Casos de estudio incluidos
+## Proyectos incluidos
+
+### RutaSegura ITM — 1er lugar, HackaPony 2026
+
+PWA colaborativa para el transporte público de Morelia, desarrollada en un hackathon de 8 horas por un equipo de 4. Las personas ven las rutas en un mapa, reportan en uno o dos toques y los demás reciben el reporte en vivo.
+
+- Rol presentado: datos, Supabase y tiempo real.
+- Áreas destacadas: esquema PostgreSQL, RLS, triggers, reglas anti-spam en el servidor, UI optimista y polling de respaldo.
+- Alcance: el mapa base, la geometría, el simulador, el panel y gran parte de la interfaz fueron de mis compañeros. Las unidades son simuladas (sin GPS), los datos de luz, rampa y techo y parte de los reportes son de ejemplo, y las rutas provienen de OpenStreetMap/OSRM y no son oficiales. El equipo usó asistentes de IA, permitido por el evento.
+- Demo: [movilidadurbanaitm.vercel.app/morelia](https://movilidadurbanaitm.vercel.app/morelia)
+- Repositorio (fork): [Cesaredmyt/Hackapony](https://github.com/Cesaredmyt/Hackapony)
 
 ### Kuni
 
 Sistema de monitoreo remoto para enfermedades crónicas desarrollado durante Innovation Fest 2026. El caso documenta persistencia con PostgreSQL y RLS, recordatorios mediante una cola de salida, integración con WhatsApp/SMS y procesamiento de webhooks firmados.
 
-- Rol presentado: backend e integraciones.
+- Rol presentado: backend e integraciones, en un equipo de 5 personas (3 en desarrollo).
 - Evidencia resumida: 20 tablas, 6 vistas SQL y recorrido end-to-end.
 - Repositorio: [Cesaredmyt/Kuni](https://github.com/Cesaredmyt/Kuni)
 
@@ -91,7 +102,7 @@ Sistema de monitoreo remoto para enfermedades crónicas desarrollado durante Inn
 
 Aplicación para centralizar adopciones, citas, esterilizaciones y reportes de bienestar animal mediante autenticación JWT y control de acceso basado en roles.
 
-- Rol presentado: Backend Lead en un equipo de cuatro integrantes.
+- Rol presentado: Backend Lead en un equipo de 6 personas.
 - Áreas destacadas: arquitectura, modelo relacional, JWT/RBAC e integración con frontend.
 - Repositorio: [Cesaredmyt/Adopciones-IMPA](https://github.com/Cesaredmyt/Adopciones-IMPA)
 
@@ -104,7 +115,15 @@ Pipeline reproducible desarrollado bajo la metodología CRISP-DM para comparar m
 - Los resultados se presentan como evaluación experimental sobre datos públicos; no representan rendimiento bancario en producción.
 - Repositorio: [Cesaredmyt/fraud-detection-itm](https://github.com/Cesaredmyt/fraud-detection-itm)
 
-También se incluyen ProjeXus, Aquamarine Resort y Biblioteca Digital como antecedentes de desarrollo backend, full stack y modelado de datos.
+También se incluyen [ProjeXus](https://github.com/Cesaredmyt/ProjeXus), [Aquamarine Resort](https://github.com/Cesaredmyt/Aquamarine-Resort) y Biblioteca Digital como antecedentes de desarrollo backend, full stack y modelado de datos.
+
+## Certificaciones
+
+| Certificación | Emisor | Fecha | Verificación |
+|---|---|---|---|
+| Google Cloud Engineering Certificate | Google Cloud | Noviembre 2026 | [Credly](https://www.credly.com/badges/b6d93cb1-a902-4b4b-8cc1-673106845d63) · [Google Skills](https://www.skills.google/public_profiles/f63a31d6-8a03-46d7-b0dd-08d93673b2ab) |
+| Google AI Professional Certificate | Google · Coursera | Agosto 2026 | [Coursera](https://coursera.org/verify/professional-cert/YGE1TV7LKSU2) |
+| Inteligencia Artificial Aplicada, nivel intermedio (30 h) | INFOTEC · Gobierno de México | 2026 | [INFOTEC](https://www.epc.gob.mx/acreditacion/9e3ff94c-76c0-45aa-b754-cf2c39e2a105) |
 
 ## Estructura del repositorio
 
@@ -124,7 +143,7 @@ portfolio/
 │   │   ├── header.tsx           # Hero, propuesta profesional y métricas
 │   │   ├── HomeLab.tsx          # Infraestructura y seguridad
 │   │   ├── Nav.tsx              # Navegación, idioma y tema
-│   │   ├── projects.tsx         # Casos, arquitecturas y flujos
+│   │   ├── projects.tsx         # Proyectos, arquitecturas y flujos
 │   │   ├── Skills.tsx           # Capacidades técnicas
 │   │   └── Starfield.tsx        # Fondo interactivo
 │   ├── context/
@@ -222,7 +241,9 @@ La configuración inicial se encuentra en `index.html` e incluye:
 
 | Contenido | Ubicación principal |
 |---|---|
-| Casos de estudio y métricas | `src/components/projects.tsx` |
+| Proyectos y métricas | `src/components/projects.tsx` |
+| Formación y certificaciones | `src/components/Education.tsx` |
+| Currículum descargable | `public/cv.pdf` |
 | Propuesta profesional | `src/components/header.tsx` |
 | Habilidades | `src/components/Skills.tsx` |
 | Home Lab | `src/data/homelab.ts` |
