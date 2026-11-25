@@ -232,7 +232,7 @@ const Contact: React.FC = () => {
                 <Magnetic strength={0.3}>
                   <a
                     href="/cv.pdf"
-                    download
+                    download="CV - César Enrique Díaz Maldonado.pdf"
                     className="group/cv inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium rounded-xl transition-colors duration-200"
                   >
                     <FaDownload size={12} className="transition-transform duration-300 group-hover/cv:translate-y-0.5" />

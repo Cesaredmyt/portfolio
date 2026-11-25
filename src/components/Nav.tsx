@@ -103,7 +103,7 @@ const Nav: React.FC = () => {
 
             <a
               href="/cv.pdf"
-              download
+              download="CV - César Enrique Díaz Maldonado.pdf"
               className="shine group hidden sm:flex items-center gap-2 text-xs font-semibold text-gray-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-2 rounded-lg transition-colors duration-200"
             >
               <FaDownload size={11} className="transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -150,7 +150,7 @@ const Nav: React.FC = () => {
                 </motion.li>
               ))}
               <li>
-                <a href="/cv.pdf" download className="flex items-center gap-2 py-3 text-sm text-emerald-400">
+                <a href="/cv.pdf" download="CV - César Enrique Díaz Maldonado.pdf" className="flex items-center gap-2 py-3 text-sm text-emerald-400">
                   <FaDownload size={11} /> {tr('Descargar CV', 'Download résumé')}
                 </a>
               </li>

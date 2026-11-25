@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { FaGraduationCap, FaStar, FaCertificate, FaGoogle, FaExternalLinkAlt } from 'react-icons/fa';
 import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
@@ -8,14 +7,31 @@ import { useLanguage } from '../context/LanguageContext';
 
 interface Cert {
   title: string;
+  titleEn?: string;
   issuer: string;
+  issuerEn?: string;
   date: string;
+  detail?: string;
+  detailEn?: string;
   url?: string;
+  extra?: { url: string; es: string; en: string };
   courses?: string[];
   accent: 'blue';
 }
 
 const certs: Cert[] = [
+  {
+    title: 'Google Cloud Engineering Certificate',
+    issuer: 'Google Cloud',
+    date: 'Nov 2026',
+    url: 'https://www.credly.com/badges/b6d93cb1-a902-4b4b-8cc1-673106845d63',
+    extra: {
+      url: 'https://www.skills.google/public_profiles/f63a31d6-8a03-46d7-b0dd-08d93673b2ab',
+      es: 'Ver las 10 insignias en Google Skills',
+      en: 'See the 10 badges on Google Skills',
+    },
+    accent: 'blue',
+  },
   {
     title: 'Google AI Professional Certificate',
     issuer: 'Google · Coursera',
@@ -32,13 +48,18 @@ const certs: Cert[] = [
       'App Building',
     ],
   },
+  {
+    title: 'Inteligencia Artificial Aplicada, nivel intermedio',
+    titleEn: 'Applied Artificial Intelligence, intermediate level',
+    issuer: 'INFOTEC · Gobierno de México',
+    issuerEn: 'INFOTEC · Government of Mexico',
+    date: '2026',
+    detail: 'Curso de 30 horas · 20 jul – 21 ago 2026',
+    detailEn: '30-hour course · Jul 20 – Aug 21, 2026',
+    url: 'https://www.epc.gob.mx/acreditacion/9e3ff94c-76c0-45aa-b754-cf2c39e2a105',
+    accent: 'blue',
+  },
 ];
-
-const inProgress = {
-  title: 'Google Cloud Engineering Certificate',
-  issuer: 'Google Cloud Career Launchpad · LatAm',
-  progress: 22,
-};
 
 const accentClass = {
   blue: 'bg-blue-500/10 border-blue-500/20 text-blue-300',
@@ -85,7 +106,7 @@ const Education: React.FC = () => {
         </SpotlightCard>
       </Reveal>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {certs.map((c, i) => (
           <Reveal key={c.title} delay={i * 0.1} className="h-full">
             <SpotlightCard
@@ -98,8 +119,9 @@ const Education: React.FC = () => {
                 </div>
                 <span className="text-xs font-mono text-gray-500">{language === 'es' ? c.date : c.date.replace('Ago', 'Aug')}</span>
               </div>
-              <h4 className="font-display font-semibold text-white leading-snug">{c.title}</h4>
-              <p className="text-sm text-gray-500 mt-1 mb-4">{c.issuer}</p>
+              <h4 className="font-display font-semibold text-white leading-snug">{language === 'es' ? c.title : c.titleEn ?? c.title}</h4>
+              <p className="text-sm text-gray-500 mt-1 mb-4">{language === 'es' ? c.issuer : c.issuerEn ?? c.issuer}</p>
+              {c.detail && <p className="text-xs font-mono text-gray-500 mb-4">{language === 'es' ? c.detail : c.detailEn ?? c.detail}</p>}
 
               {c.courses && (
                 <div className="mb-4">
@@ -118,54 +140,27 @@ const Education: React.FC = () => {
                 </div>
               )}
 
-              {c.url && (
-                <a
-                  href={c.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/link relative z-10 mt-auto inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-emerald-200 w-fit"
-                >
-                  {tr('Verificar credencial', 'Verify credential')}
-                  <FaExternalLinkAlt size={9} className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                </a>
-              )}
+              <div className="mt-auto flex flex-col gap-2">
+                {[
+                  ...(c.url ? [{ url: c.url, label: tr('Verificar credencial', 'Verify credential') }] : []),
+                  ...(c.extra ? [{ url: c.extra.url, label: tr(c.extra.es, c.extra.en) }] : []),
+                ].map((link) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/link relative z-10 inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-emerald-200 w-fit"
+                  >
+                    {link.label}
+                    <FaExternalLinkAlt size={9} className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                  </a>
+                ))}
+              </div>
             </SpotlightCard>
           </Reveal>
         ))}
 
-        <Reveal delay={0.2} className="h-full">
-          <SpotlightCard
-            tilt={7}
-            className="group h-full glass border border-dashed border-sky-500/25 hover:border-sky-500/50 rounded-2xl p-6 flex flex-col transition-colors duration-300"
-          >
-            <div className="flex items-center justify-between mb-5">
-              <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-300 transition-transform duration-500 group-hover:rotate-[360deg]">
-                <FaGoogle size={15} />
-              </div>
-              <span className="flex items-center gap-1.5 text-xs font-mono text-sky-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" /> {tr('en curso', 'in progress')}
-              </span>
-            </div>
-            <h4 className="font-display font-semibold text-white leading-snug">{inProgress.title}</h4>
-            <p className="text-sm text-gray-500 mt-1 mb-5">{inProgress.issuer}</p>
-            <div className="mt-auto">
-              <div className="flex justify-between text-[11px] font-mono text-gray-500 mb-1.5">
-                <span>{tr('progreso', 'progress')}</span>
-                <span>{inProgress.progress}%</span>
-              </div>
-              <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  style={{ width: `${inProgress.progress}%`, originX: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-                  className="h-full rounded-full bg-gradient-to-r from-sky-400 to-emerald-400"
-                />
-              </div>
-            </div>
-          </SpotlightCard>
-        </Reveal>
       </div>
     </div>
   </section>

@@ -4,7 +4,7 @@ import type { IconType } from 'react-icons';
 import {
   FaGithub, FaExternalLinkAlt, FaWhatsapp, FaFlagCheckered, FaHeartbeat, FaClock, FaLayerGroup, FaCheckDouble,
   FaExclamationTriangle, FaFileAlt, FaSearch, FaCalendarCheck, FaSyringe, FaHome, FaUserPlus, FaUsers, FaTrophy, FaGavel,
-  FaImage, FaProjectDiagram, FaDatabase, FaShieldAlt, FaServer, FaChartLine, FaCodeBranch, FaArrowRight, FaCode,
+  FaImage, FaProjectDiagram, FaDatabase, FaShieldAlt, FaServer, FaChartLine, FaCodeBranch, FaArrowRight, FaCode, FaBus,
 } from 'react-icons/fa';
 import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
@@ -649,7 +649,7 @@ const Kuni: React.FC = () => {
             <span className="flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-emerald-500/5 text-emerald-300 border border-emerald-500/25">
               <FaCode size={10} /> {tr('Backend e integraciones', 'Backend and integrations')}
             </span>
-            <span className="text-xs font-mono text-gray-500">{tr('Hackatón · equipo de 3', 'Hackathon · team of 3')}</span>
+            <span className="text-xs font-mono text-gray-500">{tr('Hackatón · equipo de 5 (3 en desarrollo)', 'Hackathon · team of 5 (3 developers)')}</span>
           </div>
 
           <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-1 flex items-center gap-3">
@@ -724,6 +724,165 @@ const Kuni: React.FC = () => {
   );
 };
 
+/* ── RutaSegura: tarjeta destacada ──────────────────────── */
+const rutaSteps: Step[] = [
+  { Icon: FaUsers, label: 'Reporte', labelEn: 'Report', tag: '1-2 taps', detail: 'La persona avisa unidad llena, unidad pasando, incidencia o accesibilidad.', detailEn: 'A rider reports a full bus, a bus passing by, an incident or an accessibility issue.' },
+  { Icon: FaShieldAlt, label: 'Reglas', labelEn: 'Rules', tag: 'postgres', detail: 'La base aplica RLS, límite de frecuencia, bloqueo del voto propio y redondeo de la ubicación.', detailEn: 'The database applies RLS, rate limits, self-vote blocking and location rounding.' },
+  { Icon: FaDatabase, label: 'Tiempo real', labelEn: 'Realtime', tag: 'supabase', detail: 'Realtime publica el cambio; si falla el canal, hay polling de respaldo.', detailEn: 'Realtime publishes the change, with polling as a fallback if the channel fails.' },
+  { Icon: FaCheckDouble, label: 'Confirmación', labelEn: 'Confirmation', tag: 'trust', detail: 'Otras personas confirman el reporte, que caduca según su tipo.', detailEn: 'Other riders confirm the report, which expires depending on its type.' },
+];
+
+const rutaArchitecture: ArchitectureNode[] = [
+  { Icon: FaImage, label: 'PWA Next.js', labelEn: 'Next.js PWA', detail: 'Mapa, reportes y planificador', detailEn: 'Map, reports and trip planner' },
+  { Icon: FaServer, label: 'Hooks y dominio', labelEn: 'Hooks and domain', detail: 'UI optimista y funciones puras', detailEn: 'Optimistic UI and pure functions' },
+  { Icon: FaShieldAlt, label: 'RLS + triggers', detail: 'Reglas aplicadas en la base', detailEn: 'Rules enforced in the database' },
+  { Icon: FaDatabase, label: 'Supabase Realtime', detail: 'Postgres y canales en vivo', detailEn: 'Postgres and live channels' },
+];
+
+const rutaShots = [
+  { src: '/img/rutasegura-reportes.webp', width: 440, height: 966, es: 'Opciones de reporte de incidencia sobre el mapa', en: 'Incident report options over the map', className: '-rotate-6 translate-y-4' },
+  { src: '/img/rutasegura-viaje.webp', width: 449, height: 974, es: 'Viaje recomendado con caminata en el mapa', en: 'Recommended trip with walking directions on the map', className: 'z-10 -translate-y-1' },
+  { src: '/img/rutasegura-parada.webp', width: 445, height: 966, es: 'Detalle de la parada más cercana y tiempo de espera', en: 'Nearest stop details and waiting time', className: 'rotate-6 translate-y-4' },
+];
+
+const RutaSeguraVisual: React.FC = () => {
+  const { language, tr } = useLanguage();
+  const [view, setView] = useState<View>('resultado');
+  const accent = '#60A5FA';
+
+  return (
+    <div className="relative h-full min-h-[380px] md:min-h-[440px] overflow-hidden bg-gradient-to-br from-blue-950/70 via-gray-950 to-orange-950/30">
+      <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full" style={{ background: 'radial-gradient(closest-side, rgb(96 165 250 / 0.25), transparent)' }} />
+      <div className="absolute top-4 left-4 z-20">
+        <ViewToggle view={view} views={['resultado', 'arquitectura', 'flujo']} onChange={setView} accent={accent} />
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        {view === 'resultado' ? (
+          <motion.div key="shots" className="absolute inset-x-0 bottom-0 top-16 flex items-center justify-center gap-2 px-5 pb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+            {rutaShots.map((shot) => (
+              <div key={shot.src} className={`dark-surface w-[31%] max-w-[170px] rounded-2xl overflow-hidden border border-white/15 shadow-2xl shadow-black/60 transition-transform duration-700 ease-out group-hover:rotate-0 group-hover:translate-y-0 ${shot.className}`}>
+                <SmartImage src={shot.src} alt={language === 'es' ? shot.es : shot.en} width={shot.width} height={shot.height} wrapperClassName="aspect-[445/966]" className="w-full h-full object-cover block" />
+              </div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            key={view}
+            className="dark-surface absolute left-4 right-4 top-16 bottom-4 rounded-xl border border-white/10 bg-[#0d1117] shadow-2xl overflow-hidden"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.3 }}
+          >
+            {view === 'arquitectura' ? (
+              <ArchitectureDiagram nodes={rutaArchitecture} accent={accent} caption="Cliente → dominio → reglas → tiempo real" captionEn="Client → domain → rules → realtime" />
+            ) : (
+              <FlowDemo steps={rutaSteps} accent={accent} caption="recorrido de un reporte" captionEn="report lifecycle" interval={2200} />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <p className="sr-only">{tr('Capturas de RutaSegura ITM', 'RutaSegura ITM screenshots')}</p>
+    </div>
+  );
+};
+
+const RutaSegura: React.FC = () => {
+  const { tr } = useLanguage();
+  const [showCase, setShowCase] = useState(false);
+
+  return (
+  <Reveal className="mb-6">
+    <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 260, damping: 22 }} className="group orbit-border rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-emerald-500/10">
+      <SpotlightCard className="grid grid-cols-1 md:grid-cols-2">
+        <RutaSeguraVisual />
+        <div className="p-7 md:p-8 flex flex-col">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-400/10 text-amber-300 border border-amber-400/25">
+              <FaTrophy size={10} /> {tr('1er lugar · HackaPony 2026', '1st place · HackaPony 2026')}
+            </span>
+            <span className="flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-emerald-500/5 text-emerald-300 border border-emerald-500/25">
+              <FaCode size={10} /> {tr('Datos, Supabase y tiempo real', 'Data, Supabase and realtime')}
+            </span>
+            <span className="text-xs font-mono text-gray-500">{tr('Hackatón · equipo de 4', 'Hackathon · team of 4')}</span>
+          </div>
+
+          <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-1 flex items-center gap-3">
+            RutaSegura ITM
+            <FaBus className="text-emerald-400 group-hover:animate-pulse" size={22} />
+          </h3>
+          <p className="text-sm text-emerald-300 font-mono mb-4">{tr('Monitoreo colaborativo del transporte público de Morelia', 'Collaborative public transit monitoring for Morelia')}</p>
+          <p className="text-sm text-gray-400 leading-relaxed mb-5">{tr('PWA donde las personas ven las rutas en un mapa, reportan en uno o dos toques y los demás lo ven en vivo.', 'PWA where riders see routes on a map, report in one or two taps and everyone else sees it live.')}</p>
+
+          <div className="grid grid-cols-3 gap-2 mb-5">
+            {[
+              ['13', tr('rutas', 'routes')],
+              ['173', tr('paradas', 'stops')],
+              ['8 h', tr('de hackatón', 'hackathon')],
+            ].map(([value, label]) => (
+              <div key={label} className="rounded-xl border border-white/5 bg-white/[0.025] px-2 py-3 text-center transition-colors group-hover:border-white/10">
+                <p className="font-display text-lg font-bold text-white">{value}</p>
+                <p className="mt-0.5 text-[10px] leading-tight text-gray-500">{label}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-1.5 mb-6">
+            {([
+              { label: 'Next.js 16', variant: 'gray' },
+              { label: 'TypeScript', variant: 'blue' },
+              { label: 'Supabase', variant: 'emerald' },
+              { label: 'PostgreSQL', variant: 'blue' },
+              { label: 'RLS', variant: 'emerald' },
+            ] as Tech[]).map((t) => <TechBadge key={t.label} {...t} />)}
+            <span title="React 19, Tailwind 4, shadcn, Zustand, Mapbox GL, Turf.js, OpenStreetMap/OSRM, Vercel" className="inline-flex items-center rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[11px] font-mono text-gray-400">+8</span>
+          </div>
+
+          <div className="mt-auto flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCase((value) => !value)}
+              aria-expanded={showCase}
+              className="shine inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-gray-950 transition-colors hover:bg-emerald-400 cursor-pointer"
+            >
+              <FaProjectDiagram size={12} />
+              {showCase ? tr('Ocultar caso', 'Hide case study') : tr('Ver caso de estudio', 'View case study')}
+            </button>
+            <a href="https://movilidadurbanaitm.vercel.app/morelia" target="_blank" rel="noopener noreferrer" className="relative z-10 inline-flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300 transition-colors hover:bg-emerald-500/20">
+              <FaExternalLinkAlt size={11} /> {tr('Ver demo', 'Live demo')}
+            </a>
+            <GithubLink href="https://github.com/Cesaredmyt/Hackapony" />
+          </div>
+
+          <AnimatePresence initial={false}>
+            {showCase && (
+              <motion.dl
+                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                className="overflow-hidden rounded-xl border border-white/10 bg-black/20"
+              >
+                <div className="space-y-3 p-4 text-sm leading-relaxed">
+                  <div><dt className="font-mono text-xs text-emerald-400 mb-0.5">{tr('Problema', 'Problem')}</dt><dd className="text-gray-400">{tr('No se sabe cuándo pasa la unidad, si viene llena o si la parada es segura o accesible.', "Riders can't tell when the bus is coming, whether it is full, or whether a stop is safe and accessible.")}</dd></div>
+                  <div><dt className="font-mono text-xs text-emerald-400 mb-0.5">{tr('Mi contribución', 'My contribution')}</dt><dd className="text-gray-400">{tr('Base de datos en Postgres (esquema, RLS, triggers, Realtime), reglas anti-spam en el servidor, sesión anónima, hooks de tiempo real con UI optimista y polling de respaldo, corrección de reloj y colaboración en la interfaz.', 'Postgres database (schema, RLS, triggers, Realtime), server-side anti-spam rules, anonymous sessions, realtime hooks with optimistic UI and polling fallback, clock-skew correction and UI collaboration.')}</dd></div>
+                  <div><dt className="font-mono text-xs text-emerald-400 mb-0.5">{tr('Resultado', 'Result')}</dt><dd className="text-gray-400">{tr('1er lugar. Demo en línea con reportes que se sincronizan entre dispositivos.', '1st place. Live demo with reports syncing across devices.')}</dd></div>
+                  <div><dt className="font-mono text-xs text-emerald-400 mb-0.5">{tr('Nota', 'Note')}</dt><dd className="text-gray-400">{tr('El mapa base, la geometría, el simulador, el panel y gran parte de la interfaz fueron de mis compañeros. Las unidades son simuladas (sin GPS); los datos de luz, rampa y techo y parte de los reportes son de ejemplo; las rutas vienen de OpenStreetMap/OSRM y no son oficiales. El equipo usó asistentes de IA, permitido por el evento.', 'The base map, geometry, simulator, admin panel and much of the UI were built by my teammates. Vehicles are simulated (no GPS); lighting, ramp and shelter data and some reports are sample data; routes come from OpenStreetMap/OSRM and are not official. The team used AI assistants, as the event allowed.')}</dd></div>
+                </div>
+                <a href="/img/rutasegura-arquitectura.webp" target="_blank" rel="noopener noreferrer" className="relative z-10 block border-t border-white/10 p-4">
+                  <SmartImage src="/img/rutasegura-arquitectura.webp" alt={tr('Diagrama de arquitectura técnica de RutaSegura ITM', 'RutaSegura ITM technical architecture diagram')} width={2400} height={1283} wrapperClassName="aspect-[2400/1283] rounded-lg overflow-hidden" className="w-full block" />
+                  <span className="mt-2 inline-flex items-center gap-1.5 text-xs text-emerald-300">{tr('Abrir diagrama de arquitectura', 'Open architecture diagram')} <FaExternalLinkAlt size={9} /></span>
+                </a>
+              </motion.dl>
+            )}
+          </AnimatePresence>
+        </div>
+      </SpotlightCard>
+    </motion.div>
+  </Reveal>
+  );
+};
+
 /* ── Proyectos anteriores ───────────────────────────────── */
 const earlier: CardProps[] = [
   {
@@ -738,7 +897,7 @@ const earlier: CardProps[] = [
       { label: 'Spring Boot', variant: 'emerald' },
       { label: 'PostgreSQL', variant: 'blue' },
     ],
-    github: 'https://github.com/TonyMed12/ProjeXus',
+    github: 'https://github.com/Cesaredmyt/ProjeXus',
     image: '/img/Projexus.webp',
     accent: '#A78BFA',
     url: 'projexus / concursos',
@@ -818,10 +977,11 @@ const Projects: React.FC = () => {
       <SectionHeading
         index="01"
         title={tr('Proyectos', 'Projects')}
-        subtitle={tr('Casos de estudio con problema, contribución y resultado verificable.', 'Case studies organized around the problem, my contribution and a verifiable result.')}
       />
 
-      <p className="text-xs font-mono text-gray-500 tracking-[0.2em] uppercase mb-4">{tr('Casos destacados · 2026', 'Featured case studies · 2026')}</p>
+      <p className="text-xs font-mono text-gray-500 tracking-[0.2em] uppercase mb-4">{tr('Proyectos destacados · 2026', 'Featured projects · 2026')}</p>
+
+      <RutaSegura />
 
       <Kuni />
 
@@ -832,8 +992,8 @@ const Projects: React.FC = () => {
             year="2026"
             title="IMPA — Plataforma de Adopciones"
             titleEn="IMPA — Adoption Platform"
-            role="Backend Lead · equipo de 4"
-            roleEn="Backend Lead · team of 4"
+            role="Backend Lead · equipo de 6"
+            roleEn="Backend Lead · team of 6"
             description="Centraliza adopciones, agenda, esterilizaciones y reportes mediante permisos por rol."
             descriptionEn="Centralizes adoptions, scheduling, sterilizations and reports through role-based access."
             metrics={[
@@ -851,12 +1011,12 @@ const Projects: React.FC = () => {
             ]}
             caseStudy={{
               problem: 'Adopciones, citas, esterilizaciones y reportes necesitaban un flujo centralizado con permisos por rol.',
-              contribution: 'Lideré el backend en un equipo de 4: arquitectura, modelo relacional, JWT/RBAC e integración con el frontend.',
+              contribution: 'Lideré el backend en un equipo de 6: arquitectura, modelo relacional, JWT/RBAC e integración con el frontend.',
               result: 'MVP con flujos conectados para adopciones, agenda, esterilizaciones y reportes de maltrato.',
             }}
             caseStudyEn={{
               problem: 'Adoptions, appointments, sterilizations and reports needed one role-aware workflow.',
-              contribution: 'I led backend work in a four-person team: architecture, relational modeling, JWT/RBAC and frontend integration.',
+              contribution: 'I led backend work in a six-person team: architecture, relational modeling, JWT/RBAC and frontend integration.',
               result: 'MVP with connected adoption, scheduling, sterilization and animal-abuse reporting workflows.',
             }}
             github="https://github.com/Cesaredmyt/Adopciones-IMPA"

@@ -130,14 +130,14 @@ const LanguagesCard: React.FC = () => {
 };
 
 /* ── 2. Infraestructura: terminal con docker ps ─────────── */
-const infra: (Skill & { status: string; statusEn?: string; learning?: boolean })[] = [
+const infra: (Skill & { status: string; statusEn?: string })[] = [
   { label: 'docker', Icon: SiDocker, color: '#2496ED', status: 'contenedores', statusEn: 'containers', core: true },
   { label: 'ubuntu', Icon: SiUbuntu, color: '#E95420', status: 'servidor linux', statusEn: 'linux server', core: true },
   { label: 'caddy', Icon: SiCaddy, color: '#22B638', status: 'reverse proxy', core: true },
   { label: 'authelia', Icon: SiAuthelia, color: '#4B8BF5', status: 'sso + 2fa', core: true },
   { label: 'tailscale', Icon: SiTailscale, color: '#E5E7EB', status: 'vpn mesh', core: true },
   { label: 'netdata', Icon: SiNetdata, color: '#00AB44', status: 'métricas', statusEn: 'metrics' },
-  { label: 'google-cloud', Icon: SiGooglecloud, color: '#4285F4', status: 'aprendiendo', statusEn: 'learning', learning: true },
+  { label: 'google-cloud', Icon: SiGooglecloud, color: '#4285F4', status: 'certificado', statusEn: 'certified' },
 ];
 
 const InfraCard: React.FC = () => {
@@ -168,15 +168,9 @@ const InfraCard: React.FC = () => {
             <s.Icon className={`brand-row-icon ${s.core ? 'w-4 h-4' : 'w-3.5 h-3.5 text-gray-500'}`} style={s.core ? { color: s.color } : undefined} />
             <span className={`w-24 truncate ${s.core ? 'text-gray-100 font-medium' : 'text-gray-400'}`}>{s.label}</span>
             <span className="text-gray-500 flex-1 truncate">{language === 'es' ? s.status : s.statusEn ?? s.status}</span>
-            {s.learning ? (
-              <span className="flex items-center gap-1.5 text-sky-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-400" /> 22%
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5 text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> up
-              </span>
-            )}
+            <span className="flex items-center gap-1.5 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {s.label === 'google-cloud' ? 'ok' : 'up'}
+            </span>
           </motion.li>
         ))}
       </motion.ul>
@@ -321,6 +315,7 @@ const DeliveryCard: React.FC = () => {
 
 /* ── Complementarias (segundo plano) ────────────────────── */
 const complementary = [
+  { group: 'Google Cloud', groupEn: 'Google Cloud', items: ['Compute Engine', 'GKE', 'Kubernetes', 'VPC', 'Load Balancing', 'Autoscaling', 'Cloud Storage', 'Terraform', 'Vertex AI'] },
   { group: 'ML y evaluación', groupEn: 'ML and evaluation', items: ['scikit-learn', 'XGBoost', 'Random Forest', 'Isolation Forest', 'Pandas', 'NumPy', 'CRISP-DM'] },
   { group: 'Full stack e integración', groupEn: 'Full stack and integration', items: ['Next.js', 'React', 'Tailwind CSS', 'Spring Boot', 'Supabase', 'Twilio', 'React Query'] },
   { group: 'Experiencia adicional', groupEn: 'Additional experience', items: ['JavaScript', 'PHP', 'C#', 'MySQL', 'MVC', 'OOP'] },
@@ -398,7 +393,7 @@ const Skills: React.FC = () => {
   return (
   <section id="habilidades" className="py-24 px-6 md:px-12 scroll-mt-16">
     <div className="container mx-auto max-w-6xl">
-      <SectionHeading index="04" title={tr('Habilidades', 'Skills')} subtitle={tr('Perfil backend con capacidad full stack: APIs, datos, seguridad, interfaces, despliegue y calidad de código.', 'Backend profile with full-stack capabilities: APIs, data, security, interfaces, deployment and code quality.')} />
+      <SectionHeading index="04" title={tr('Habilidades', 'Skills')} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Reveal className="lg:col-span-2">
@@ -418,7 +413,7 @@ const Skills: React.FC = () => {
       <Reveal className="mt-10">
         <div className="rounded-2xl border border-dashed border-white/10 p-6">
           <p className="text-sm font-medium text-gray-400 mb-5">{tr('Tecnologías complementarias', 'Complementary technologies')}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {complementary.map(({ group, groupEn, items }) => (
               <div key={group}>
                 <p className="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2.5">{language === 'es' ? group : groupEn}</p>

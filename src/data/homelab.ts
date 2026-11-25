@@ -6,8 +6,6 @@ export interface Layer {
   short: string;
   shortEn: string;
   items: { name: string; detail: string; detailEn: string }[];
-  why: string;
-  whyEn: string;
 }
 
 // ring: 0 = núcleo, 1..4 = órbitas del diagrama, 5 = satélites (agentes)
@@ -24,8 +22,6 @@ export const layers: Layer[] = [
       { name: 'AdGuard Home', detail: 'DNS interno con wildcard *.red.casa hacia el servidor', detailEn: 'Internal DNS with a wildcard domain pointing to the server' },
       { name: 'dnsmasq', detail: 'DHCP propio en una red con doble interfaz WAN/LAN', detailEn: 'Self-managed DHCP on a dual-interface WAN/LAN network' },
     ],
-    why: 'Certificados centralizados y servicios que entran o salen sin tocar la red: el patrón de cualquier infraestructura real.',
-    whyEn: 'Centralized certificates and services that can change without redesigning the network: a production infrastructure pattern.',
   },
   {
     id: 'seguridad',
@@ -39,8 +35,6 @@ export const layers: Layer[] = [
       { name: 'CrowdSec', detail: 'Firewall colaborativo con bouncer sobre nftables', detailEn: 'Collaborative firewall with an nftables bouncer' },
       { name: 'Tailscale', detail: 'VPN mesh para acceso remoto sin exponer puertos', detailEn: 'Mesh VPN for remote access without exposed ports' },
     ],
-    why: 'Separa autenticación (quién eres) de autorización (qué puedes tocar), con una sola puerta con doble factor.',
-    whyEn: 'Separates authentication from authorization behind a single two-factor entry point.',
   },
   {
     id: 'resiliencia',
@@ -55,8 +49,6 @@ export const layers: Layer[] = [
       { name: 'Duplicati', detail: 'Backups cifrados a Google Drive con pruebas de restauración', detailEn: 'Encrypted Google Drive backups with restore tests' },
       { name: 'ntfy', detail: 'Notificaciones push centralizadas de fallos', detailEn: 'Centralized push notifications for failures' },
     ],
-    why: 'No basta con hacer backup: se verifica que restaura. El servidor sobrevive a errores propios y del hardware.',
-    whyEn: 'A backup is not enough: restores are tested. The server is designed for both software and hardware failures.',
   },
   {
     id: 'observabilidad',
@@ -70,8 +62,6 @@ export const layers: Layer[] = [
       { name: 'Uptime Kuma', detail: 'Monitoreo de disponibilidad', detailEn: 'Availability monitoring' },
       { name: 'Homepage', detail: 'Dashboard central de acceso a todos los servicios', detailEn: 'Central access dashboard for all services' },
     ],
-    why: 'Con 8 GB de RAM, cada instalación nueva se compara contra una línea base para ver su impacto real.',
-    whyEn: 'With 8 GB of RAM, every new deployment is measured against a baseline to understand its real cost.',
   },
   {
     id: 'servicios',
@@ -87,8 +77,6 @@ export const layers: Layer[] = [
       { name: 'Wiki.js', detail: 'Documentación del servidor, integrada vía API GraphQL', detailEn: 'Server documentation integrated through a GraphQL API' },
       { name: 'SearXNG', detail: 'Buscador propio y backend de búsqueda del agente de IA', detailEn: 'Self-hosted search and search backend for the AI agent' },
     ],
-    why: 'Reemplaza servicios de pago con herramientas propias que se usan todos los días.',
-    whyEn: 'Replaces paid services with self-managed tools used every day.',
   },
   {
     id: 'agentes',
@@ -102,8 +90,6 @@ export const layers: Layer[] = [
       { name: 'Nano', detail: 'Agente conversacional en Telegram, sin acceso a infraestructura', detailEn: 'Telegram conversational agent with no infrastructure access' },
       { name: 'Sysadmin', detail: 'Acceso controlado a Docker en sandbox con confirmación manual', detailEn: 'Sandboxed Docker access with manual confirmation' },
     ],
-    why: 'El diferenciador no es "usar IA", sino el diseño de seguridad alrededor del agente.',
-    whyEn: 'The differentiator is not using AI; it is the security model around the agent.',
   },
 ];
 

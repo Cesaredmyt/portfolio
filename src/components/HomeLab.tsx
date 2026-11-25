@@ -203,7 +203,6 @@ const HomeLab: React.FC = () => {
                               </li>
                             ))}
                           </ul>
-                          <p className="mt-4 text-sm text-emerald-300/90 border-l-2 border-emerald-500/40 pl-3">{language === 'es' ? layer.why : layer.whyEn}</p>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -232,9 +231,6 @@ const HomeLab: React.FC = () => {
         <div className="mt-16">
           <Reveal className="text-center mb-10">
             <h3 className="font-display text-3xl md:text-4xl font-bold text-white">{tr('Dos agentes, dos niveles de confianza', 'Two agents, two trust levels')}</h3>
-            <p className="text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
-              {tr('El foco no es solo usar IA: es aplicar segmentación de permisos, sandboxing y menor privilegio sobre infraestructura real.', 'The focus is not merely using AI: it is applying permission boundaries, sandboxing and least privilege to real infrastructure.')}
-            </p>
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

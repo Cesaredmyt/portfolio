@@ -19,19 +19,19 @@ type CodeLine = { indent: number; tokens: Token[] };
 const codeLines: Record<Language, CodeLine[]> = { es: [
   { indent: 0, tokens: [{ t: 'keyword', v: 'const ' }, { t: 'var', v: 'cesar' }, op(' = {')] },
   { indent: 1, tokens: [key('base'), op(': '), str('Morelia, MX'), op(',')] },
-  { indent: 1, tokens: [key('backend'), op(': ['), ...list(['TypeScript', 'Python', 'Java']), op('],')] },
+  { indent: 1, tokens: [key('backend'), op(': ['), ...list(['Node.js', 'Spring Boot', 'APIs REST']), op('],')] },
   { indent: 1, tokens: [key('datos'), op(': ['), ...list(['PostgreSQL', 'Supabase', 'RLS']), op('],')] },
-  { indent: 1, tokens: [key('estudiando'), op(': '), str('Google Cloud'), op(',')] },
-  { indent: 1, tokens: [key('fuera_del_teclado'), op(': ['), ...list(['el cosmos', 'ajedrez', 'autos']), op('],')] },
+  { indent: 1, tokens: [key('certificado'), op(': ['), ...list(['Google Cloud', 'Google AI']), op('],')] },
+  { indent: 1, tokens: [key('fuera_del_teclado'), op(': ['), ...list(['el universo', 'ajedrez', 'autos']), op('],')] },
   { indent: 1, tokens: [key('disponible'), op(': '), { t: 'bool', v: 'true' }] },
   { indent: 0, tokens: [op('};')] },
 ], en: [
   { indent: 0, tokens: [{ t: 'keyword', v: 'const ' }, { t: 'var', v: 'cesar' }, op(' = {')] },
   { indent: 1, tokens: [key('based_in'), op(': '), str('Morelia, MX'), op(',')] },
-  { indent: 1, tokens: [key('backend'), op(': ['), ...list(['TypeScript', 'Python', 'Java']), op('],')] },
+  { indent: 1, tokens: [key('backend'), op(': ['), ...list(['Node.js', 'Spring Boot', 'REST APIs']), op('],')] },
   { indent: 1, tokens: [key('data'), op(': ['), ...list(['PostgreSQL', 'Supabase', 'RLS']), op('],')] },
-  { indent: 1, tokens: [key('learning'), op(': '), str('Google Cloud'), op(',')] },
-  { indent: 1, tokens: [key('away_from_keyboard'), op(': ['), ...list(['space', 'chess', 'cars']), op('],')] },
+  { indent: 1, tokens: [key('certified'), op(': ['), ...list(['Google Cloud', 'Google AI']), op('],')] },
+  { indent: 1, tokens: [key('away_from_keyboard'), op(': ['), ...list(['the universe', 'chess', 'cars']), op('],')] },
   { indent: 1, tokens: [key('available'), op(': '), { t: 'bool', v: 'true' }] },
   { indent: 0, tokens: [op('};')] },
 ] };
@@ -94,7 +94,9 @@ const timeline = [
   { year: '2025', esTitle: 'ProjeXus', enTitle: 'ProjeXus', esDetail: 'Backend REST con Spring Boot', enDetail: 'REST backend with Spring Boot' },
   { year: '2026', esTitle: 'IMPA · Detección de fraude · Kuni', enTitle: 'IMPA · Fraud Detection · Kuni', esDetail: 'Liderazgo backend, ML e Innovation Fest', enDetail: 'Backend leadership, ML and Innovation Fest' },
   { year: '2026', esTitle: 'Google AI Professional Certificate', enTitle: 'Google AI Professional Certificate', esDetail: 'Coursera · 7 cursos', enDetail: 'Coursera · 7 courses' },
-  { year: 'Hoy', yearEn: 'Now', esTitle: 'Home Lab y Google Cloud', enTitle: 'Home Lab and Google Cloud', esDetail: 'Infraestructura propia · certificado en curso', enDetail: 'Self-managed infrastructure · certificate in progress', now: true },
+  { year: '2026', esTitle: 'RutaSegura ITM · 1er lugar', enTitle: 'RutaSegura ITM · 1st place', esDetail: 'HackaPony 2026 · datos y tiempo real', enDetail: 'HackaPony 2026 · data and realtime' },
+  { year: '2026', esTitle: 'Google Cloud Engineering Certificate', enTitle: 'Google Cloud Engineering Certificate', esDetail: 'Google Cloud · noviembre', enDetail: 'Google Cloud · November' },
+  { year: 'Hoy', yearEn: 'Now', esTitle: 'Home Lab', enTitle: 'Home Lab', esDetail: 'Infraestructura propia', enDetail: 'Self-managed infrastructure', now: true },
   { year: '2027', esTitle: 'Egreso', enTitle: 'Graduation', esDetail: 'Ingeniería en Sistemas', enDetail: 'Computer Systems Engineering', future: true },
 ];
 
